@@ -328,3 +328,44 @@ VALUES
     ('AE_STANDARD', 'UAE Standard Registration', 'AE');
 
 
+    CREATE TABLE core_user_m
+    (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        name VARCHAR(256) NOT NULL,
+        email VARCHAR(256) NOT NULL,
+        mobile VARCHAR(128) NOT NULL,
+        password VARCHAR(128) NOT NULL,
+        is_deleted TINYINT DEFAULT 0,
+        created_time TIMESTAMP DEFAULT NOW(),
+        updated_time TIMESTAMP DEFAULT NOW()
+    )
+        AUTO_INCREMENT = 1001;
+
+    CREATE TABLE user_profile_t
+    (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        user_id LONG NOT NULL,
+        name VARCHAR(256) NOT NULL,
+        is_deleted TINYINT DEFAULT 0,
+        created_time TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE TABLE user_document_t
+    (
+        id INT PRIMARY KEY,
+        profile_id LONG NOT NULL,
+        doc_template_id VARCHAR(255) NOT NULL,
+        doc_holder_name VARCHAR(255) NOT NULL,
+        doc_name VARCHAR(255) NOT NULL,
+        doc_id VARCHAR(128) NOT NULL,
+        doc_s3_upload VARCHAR(255) NOT NULL,
+        uploaded_date TIMESTAMP DEFAULT NOW(),
+        expiry_date TIMESTAMP DEFAULT NOW(),
+        is_sms TINYINT DEFAULT 1,
+        is_email TINYINT DEFAULT 1,
+        is_whatsapp TINYINT DEFAULT 1,
+        notification_time TIMESTAMP NOT NULL,
+        is_deleted TINYINT DEFAULT 0,
+        created_time TIMESTAMP DEFAULT NOW(),
+        updated_time TIMESTAMP DEFAULT NOW()
+    )
