@@ -9,6 +9,7 @@ import com.byebyechallan.dto.StateDto;
 import com.byebyechallan.entity.CoreDocumentEntity;
 import com.byebyechallan.repository.CountryStateRepository;
 import com.byebyechallan.repository.DocumentRepository;
+import com.byebyechallan.repository.RegistrationTypeRepository;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class DocumentService {
 
   @Autowired
   private CountryStateRepository countryStateRepository;
+
+  @Autowired
+  private RegistrationTypeRepository registrationTypeRepository;
 
   public List<CoreDocumentEntity> getDocument(String country, String state, String registrationType,
       String vehicleType, String docType) {
@@ -47,6 +51,6 @@ public class DocumentService {
   }
 
   public List<RegistrationDto> getAllRegistrationType(String countryId) {
-    return new ArrayList<>();
+    return registrationTypeRepository.getByCountryIdAndIsDeleted(countryId, false);
   }
 }
