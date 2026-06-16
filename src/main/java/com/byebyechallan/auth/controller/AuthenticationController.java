@@ -11,10 +11,12 @@ import com.byebyechallan.auth.repository.UserRepository;
 import com.byebyechallan.auth.service.JwtService;
 import com.byebyechallan.auth.service.RefreshTokenService;
 import com.byebyechallan.auth.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Slf4j
 public class AuthenticationController {
 
   private final AuthenticationManager authManager;
@@ -43,22 +46,27 @@ public class AuthenticationController {
     this.userRepository=userRepository;
   }
 
-  @PostMapping("/register")
-  public ResponseEntity<?> register(@RequestBody RegisterRequest request){
+   @PostMapping("/register")
+   public ResponseEntity<?> register(@RequestBody RegisterRequest request){
 
-    if(userService.loadUserByUsername(request.getEmail())!=null){
-      return ResponseEntity.badRequest().body("User already exists");
-    }
-    CoreUserMEntity user = CoreUserMEntity.builder()
-        .name(request.getName())
-        .email(request.getEmail())
-        .mobile(request.getMobileNo())
-        .role(Role.USER)
-        .password(passwordEncoder.encode(request.getPassword()))
-        .build();
-    userRepository.save(user);
-    return ResponseEntity.ok().body("User registered successfully");
-  }
+     log.info("Registering user with email: {}", request.getEmail());
+     try {
+       userService.loadUserByUsername(request.getEmail());
+       // If we reach here, user exists
+       return ResponseEntity.badRequest().body("User already exists");
+     } catch (UsernameNotFoundException e) {
+       // User doesn't exist, proceed with registration
+       CoreUserMEntity user = CoreUserMEntity.builder()
+           .name(request.getName())
+           .email(request.getEmail())
+           .mobile(request.getMobileNo())
+           .role(Role.USER)
+           .password(passwordEncoder.encode(request.getPassword()))
+           .build();
+       userRepository.save(user);
+       return ResponseEntity.ok().body("User registered successfully");
+     }
+   }
 
   @PostMapping("/login")
   public AuthResponse authenticate(@RequestBody LoginRequest request) {

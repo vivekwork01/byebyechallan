@@ -52,5 +52,12 @@ public class CoreUserMEntity {
   @Column(name = "updated_time")
   private Timestamp updatedTime;
 
+
+  @Override
+  public String toString() {
+    return "Id: " + this.id + " Name: " + this.name + " Email: " + this.email + " Mobile: "
+        + this.mobile + " Role: " + this.role;
+  }
+
 }
 
