@@ -1,12 +1,18 @@
 package com.byebyechallan.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.sql.Timestamp;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "core_document_m")
 
 @NamedQuery(

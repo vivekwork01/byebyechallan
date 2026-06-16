@@ -1,9 +1,9 @@
-    DROP
-    DATABASE IF EXISTS byebyechallan;
+DROP
+DATABASE IF EXISTS byebyechallan;
     CREATE
-    DATABASE IF NOT EXISTS byebyechallan;
+DATABASE IF NOT EXISTS byebyechallan;
     USE
-    byebyechallan;
+byebyechallan;
 
 
 -- 2024-06-17: Added core_state_country_m table to store state and country information for documents.
@@ -308,64 +308,80 @@ VALUES ('AF', 'Afghanistan', '+93'),
        ('ZW', 'Zimbabwe', '+263');
 
 
-
 -- Registration Types
 CREATE TABLE core_registration_type_m
 (
     registration_code VARCHAR(32) PRIMARY KEY,
-    country_id VARCHAR(15) NOT NULL,
+    country_id        VARCHAR(15) NOT NULL,
     registration_type VARCHAR(50) NOT NULL,
-    is_deleted TINYINT NOT NULL DEFAULT 0
+    is_deleted        TINYINT     NOT NULL DEFAULT 0
 );
 
 INSERT INTO core_registration_type_m (registration_code, registration_type, country_id)
-VALUES
-    ('IN_STATE', 'India State Registration', 'IN'),
-    ('IN_BH', 'Bharat Series Registration', 'IN'),
-    ('US_STATE', 'US State Registration', 'US'),
-    ('GB_STANDARD', 'UK Standard Registration', 'GB'),
-    ('DE_STANDARD', 'Germany Standard Registration', 'DE'),
-    ('AE_STANDARD', 'UAE Standard Registration', 'AE');
+VALUES ('IN_STATE', 'India State Registration', 'IN'),
+       ('IN_BH', 'Bharat Series Registration', 'IN'),
+       ('US_STATE', 'US State Registration', 'US'),
+       ('GB_STANDARD', 'UK Standard Registration', 'GB'),
+       ('DE_STANDARD', 'Germany Standard Registration', 'DE'),
+       ('AE_STANDARD', 'UAE Standard Registration', 'AE');
 
 
-    CREATE TABLE core_user_m
-    (
-        id INT PRIMARY KEY AUTO_INCREMENT,
-        name VARCHAR(256) NOT NULL,
-        email VARCHAR(256) NOT NULL,
-        mobile VARCHAR(128) NOT NULL,
-        password VARCHAR(128) NOT NULL,
-        is_deleted TINYINT DEFAULT 0,
-        created_time TIMESTAMP DEFAULT NOW(),
-        updated_time TIMESTAMP DEFAULT NOW()
-    )
-        AUTO_INCREMENT = 1001;
+CREATE TABLE core_user_m
+(
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    name         VARCHAR(256) NOT NULL,
+    email        VARCHAR(256) NOT NULL,
+    mobile       VARCHAR(128) NOT NULL,
+    password     VARCHAR(128) NOT NULL,
+    is_deleted   TINYINT   DEFAULT 0,
+    created_time TIMESTAMP DEFAULT NOW(),
+    updated_time TIMESTAMP DEFAULT NOW()
+) AUTO_INCREMENT = 1001;
 
-    CREATE TABLE user_profile_t
-    (
-        id INT PRIMARY KEY AUTO_INCREMENT,
-        user_id LONG NOT NULL,
-        name VARCHAR(256) NOT NULL,
-        is_deleted TINYINT DEFAULT 0,
-        created_time TIMESTAMP DEFAULT NOW()
-    );
 
-    CREATE TABLE user_document_t
-    (
-        id INT PRIMARY KEY,
-        profile_id LONG NOT NULL,
-        doc_template_id VARCHAR(255) NOT NULL,
-        doc_holder_name VARCHAR(255) NOT NULL,
-        doc_name VARCHAR(255) NOT NULL,
-        doc_id VARCHAR(128) NOT NULL,
-        doc_s3_upload VARCHAR(255) NOT NULL,
-        uploaded_date TIMESTAMP DEFAULT NOW(),
-        expiry_date TIMESTAMP DEFAULT NOW(),
-        is_sms TINYINT DEFAULT 1,
-        is_email TINYINT DEFAULT 1,
-        is_whatsapp TINYINT DEFAULT 1,
-        notification_time TIMESTAMP NOT NULL,
-        is_deleted TINYINT DEFAULT 0,
-        created_time TIMESTAMP DEFAULT NOW(),
-        updated_time TIMESTAMP DEFAULT NOW()
-    )
+ALTER TABLE core_user_m
+    ADD COLUMN role VARCHAR(50);
+
+CREATE TABLE user_profile_t
+(
+    id           INT PRIMARY KEY AUTO_INCREMENT,
+    user_id      LONG         NOT NULL,
+    name         VARCHAR(256) NOT NULL,
+    is_deleted   TINYINT   DEFAULT 0,
+    created_time TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE user_document_t
+(
+    id                INT PRIMARY KEY,
+    profile_id        LONG         NOT NULL,
+    doc_template_id   VARCHAR(255) NOT NULL,
+    doc_holder_name   VARCHAR(255) NOT NULL,
+    doc_name          VARCHAR(255) NOT NULL,
+    doc_id            VARCHAR(128) NOT NULL,
+    doc_s3_upload     VARCHAR(255) NOT NULL,
+    uploaded_date     TIMESTAMP DEFAULT NOW(),
+    expiry_date       TIMESTAMP DEFAULT NOW(),
+    is_sms            TINYINT   DEFAULT 1,
+    is_email          TINYINT   DEFAULT 1,
+    is_whatsapp       TINYINT   DEFAULT 1,
+    notification_time TIMESTAMP    NOT NULL,
+    is_deleted        TINYINT   DEFAULT 0,
+    created_time      TIMESTAMP DEFAULT NOW(),
+    updated_time      TIMESTAMP DEFAULT NOW()
+)
+
+-- Refresh Token Table to store refresh tokens for users
+CREATE TABLE core_refresh_token_tr
+(
+    id          INT PRIMARY KEY AUTO_INCREMENT,
+    user_id     INT          NOT NULL,
+    token       VARCHAR(256) NOT NULL UNIQUE,
+    expiry_time TIMESTAMP    NOT NULL
+);
+
+
+DELETE FROM core_country_state_m WHERE (country_state_id = 'IN-DH');
+INSERT INTO core_country_state_m
+VALUES ('IN-DN', 'IN', 'DN', 'INDIA', 'Dadra and Nagar Haveli', 0, 0, NOW()),
+       ('IN-DD', 'IN', 'DN', 'INDIA', 'Daman and Diu', 0, 0, NOW());

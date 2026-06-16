@@ -3,10 +3,16 @@ package com.byebyechallan.entity;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "core_vehicle_type_m")
 public class CoreVehicleTypeEntity {
 

@@ -1,12 +1,24 @@
-package com.byebyechallan.entity;
+package com.byebyechallan.auth.entity;
 
+import com.byebyechallan.auth.enums.Role;
 import jakarta.persistence.*;
+import java.util.Collection;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.sql.Timestamp;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "core_user_m")
 public class CoreUserMEntity {
 
@@ -18,7 +30,7 @@ public class CoreUserMEntity {
   @Column(name = "name")
   private String name;
 
-  @Column(name = "email")
+  @Column(name = "email", unique = true, nullable = false)
   private String email;
 
   @Column(name = "mobile")
@@ -26,6 +38,10 @@ public class CoreUserMEntity {
 
   @Column(name = "password")
   private String password;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "role")
+  private Role role;
 
   @Column(name = "is_deleted")
   private Boolean isDeleted;

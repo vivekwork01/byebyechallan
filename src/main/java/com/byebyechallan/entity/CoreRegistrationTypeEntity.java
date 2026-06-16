@@ -6,8 +6,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "core_registration_type_m")
 @NamedQuery(name = "CoreRegistrationTypeEntity.getByCountryIdAndIsDeleted", query = "SELECT crt.registrationCode registrationCode, crt.registrationType registrationType FROM CoreRegistrationTypeEntity crt WHERE crt.countryId=:countryId AND crt.isDeleted=:isDeleted", resultClass = RegistrationDto.class)
 public class CoreRegistrationTypeEntity {
