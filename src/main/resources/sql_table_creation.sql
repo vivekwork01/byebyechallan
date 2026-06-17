@@ -328,19 +328,19 @@ VALUES ('IN_STATE', 'India State Registration', 'IN'),
 
 CREATE TABLE core_user_m
 (
-    id           INT PRIMARY KEY AUTO_INCREMENT,
+    id           BIGINT PRIMARY KEY AUTO_INCREMENT,
     name         VARCHAR(256) NOT NULL,
-    email        VARCHAR(256) NOT NULL,
-    mobile       VARCHAR(128) NOT NULL,
-    password     VARCHAR(128) NOT NULL,
+    email        VARCHAR(256) UNIQUE NOT NULL,
+    mobile       VARCHAR(128) UNIQUE NOT NULL,
+    password     VARCHAR(255) NOT NULL,
+    role         VARCHAR(50) NOT NULL,
     is_deleted   TINYINT   DEFAULT 0,
     created_time TIMESTAMP DEFAULT NOW(),
     updated_time TIMESTAMP DEFAULT NOW()
 ) AUTO_INCREMENT = 1001;
 
 
-ALTER TABLE core_user_m
-    ADD COLUMN role VARCHAR(50);
+
 
 CREATE TABLE user_profile_t
 (
@@ -369,7 +369,7 @@ CREATE TABLE user_document_t
     is_deleted        TINYINT   DEFAULT 0,
     created_time      TIMESTAMP DEFAULT NOW(),
     updated_time      TIMESTAMP DEFAULT NOW()
-)
+);
 
 -- Refresh Token Table to store refresh tokens for users
 CREATE TABLE core_refresh_token_tr

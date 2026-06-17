@@ -43,8 +43,9 @@ public class CoreUserMEntity {
   @Column(name = "role")
   private Role role;
 
+  @Builder.Default
   @Column(name = "is_deleted")
-  private Boolean isDeleted;
+  private Boolean isDeleted = false;
 
   @Column(name = "created_time")
   private Timestamp createdTime;
@@ -52,6 +53,17 @@ public class CoreUserMEntity {
   @Column(name = "updated_time")
   private Timestamp updatedTime;
 
+  @PrePersist
+  protected void onCreate() {
+    if (isDeleted == null) isDeleted = false;
+    if (createdTime == null) createdTime = new Timestamp(System.currentTimeMillis());
+    updatedTime = createdTime;
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    updatedTime = new Timestamp(System.currentTimeMillis());
+  }
 
   @Override
   public String toString() {
