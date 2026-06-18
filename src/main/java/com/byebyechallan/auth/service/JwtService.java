@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
   private static final String SECRET_KEY = "bW9yZV9zZWNyZXRfa2V5X3dpdGhfaGlnaF9lbnRyb3B5XzEyMzQ1Njc4OTBfQUJDREVG";
-  private static final long EXPIRATION_TIME_MS = 1000 * 60 * 15;
+  private static final long EXPIRATION_TIME_MS = 1000 * 60 * 60 * 24; // 24 hours
+  private static final long CLOCK_SKEW_MS = 1000 * 60 * 5; // 5 minutes clock skew tolerance
 
   public String generateToken(UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<>();
@@ -31,7 +32,7 @@ public class JwtService {
         .subject(userDetails.getUsername())
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_MS))
-        .signWith(getSigningKey())
+        .signWith(getSigningKey(), io.jsonwebtoken.SignatureAlgorithm.HS256)
         .compact();
   }
 
@@ -47,6 +48,7 @@ public class JwtService {
   public <T> T extractClaims(String token, Function<Claims, T> claimResolver) {
     final Claims claims = Jwts.parser()
         .verifyWith(getSigningKey())
+        .clockSkewSeconds(CLOCK_SKEW_MS / 1000)
         .build()
         .parseSignedClaims(token)
         .getPayload();
@@ -59,7 +61,7 @@ public class JwtService {
   }
 
   private boolean isTokenExpired(String token) {
-    return extractExpiration(token).before(new Date());
+    return extractExpiration(token).before(new Date(System.currentTimeMillis() - CLOCK_SKEW_MS));
   }
 
   private Date extractExpiration(String token) {

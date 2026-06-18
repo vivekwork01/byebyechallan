@@ -31,7 +31,7 @@ public class UserService implements UserDetailsService {
   public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
     CoreUserMEntity user = userRepository.findByEmailAndIsDeleted(email, false)
         .orElseThrow(() -> new UsernameNotFoundException("User Not found: " + email));
-    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
+    SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().name());
     return new User(user.getEmail(), user.getPassword(), List.of(authority));
   }
 }
