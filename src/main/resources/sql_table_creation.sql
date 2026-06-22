@@ -329,16 +329,15 @@ VALUES ('IN_STATE', 'India State Registration', 'IN'),
 CREATE TABLE core_user_m
 (
     id           BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name         VARCHAR(256) NOT NULL,
+    name         VARCHAR(256)        NOT NULL,
     email        VARCHAR(256) UNIQUE NOT NULL,
     mobile       VARCHAR(128) UNIQUE NOT NULL,
-    password     VARCHAR(255) NOT NULL,
-    role         VARCHAR(50) NOT NULL,
+    password     VARCHAR(255)        NOT NULL,
+    role         VARCHAR(50)         NOT NULL,
     is_deleted   TINYINT   DEFAULT 0,
     created_time TIMESTAMP DEFAULT NOW(),
     updated_time TIMESTAMP DEFAULT NOW()
 ) AUTO_INCREMENT = 1001;
-
 
 
 
@@ -353,22 +352,22 @@ CREATE TABLE user_profile_t
 
 CREATE TABLE user_document_t
 (
-    id                INT PRIMARY KEY AUTO_INCREMENT,
-    profile_id        LONG         NOT NULL,
+    id                      INT PRIMARY KEY AUTO_INCREMENT,
+    profile_id              LONG         NOT NULL,
     vehicle_registration_no VARCHAR(128) NOT NULL,
-    doc_template_id   VARCHAR(255) NOT NULL,
-    doc_name          VARCHAR(255) NOT NULL,
-    doc_id            VARCHAR(128) NOT NULL,
-    doc_s3_upload     VARCHAR(255) NOT NULL,
-    uploaded_date     TIMESTAMP DEFAULT NOW(),
-    expiry_date       TIMESTAMP DEFAULT NOW(),
-    is_sms            TINYINT   DEFAULT 1,
-    is_email          TINYINT   DEFAULT 1,
-    is_whatsapp       TINYINT   DEFAULT 1,
-    notification_time TIMESTAMP    NOT NULL,
-    is_deleted        TINYINT   DEFAULT 0,
-    created_time      TIMESTAMP DEFAULT NOW(),
-    updated_time      TIMESTAMP DEFAULT NOW()
+    doc_template_id         VARCHAR(255) NOT NULL,
+    doc_name                VARCHAR(255) NOT NULL,
+    doc_id                  VARCHAR(128) NOT NULL,
+    doc_s3_upload           VARCHAR(255) NOT NULL,
+    uploaded_date           TIMESTAMP DEFAULT NOW(),
+    expiry_date             TIMESTAMP DEFAULT NOW(),
+    is_sms                  TINYINT   DEFAULT 1,
+    is_email                TINYINT   DEFAULT 1,
+    is_whatsapp             TINYINT   DEFAULT 1,
+    notification_time       TIMESTAMP    NOT NULL,
+    is_deleted              TINYINT   DEFAULT 0,
+    created_time            TIMESTAMP DEFAULT NOW(),
+    updated_time            TIMESTAMP DEFAULT NOW()
 );
 
 -- Refresh Token Table to store refresh tokens for users
@@ -381,7 +380,21 @@ CREATE TABLE core_refresh_token_tr
 );
 
 
-DELETE FROM core_country_state_m WHERE (country_state_id = 'IN-DH');
+DELETE
+FROM core_country_state_m
+WHERE (country_state_id = 'IN-DH');
 INSERT INTO core_country_state_m
 VALUES ('IN-DN', 'IN', 'DN', 'INDIA', 'Dadra and Nagar Haveli', 0, 0, NOW()),
        ('IN-DD', 'IN', 'DN', 'INDIA', 'Daman and Diu', 0, 0, NOW());
+
+
+CREATE TABLE core_profile_vehicle_tr
+(
+    id                      BIGINT PRIMARY KEY AUTO_INCREMENT,
+    profile_id              BIGINT       NOT NULL,
+    vehicle_name            VARCHAR(128) NOT NULL,
+    vehicle_registration_no VARCHAR(129) NOT NULL,
+    is_deleted              TINYINT      NOT NULL DEFAULT 0,
+    created_time            TIMESTAMP             DEFAULT NOW(),
+    updated_time            TIMESTAMP             DEFAULT NOW()
+);

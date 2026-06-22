@@ -2,21 +2,29 @@ package com.byebyechallan.service;
 
 import com.byebyechallan.dto.ProfileDto;
 import com.byebyechallan.dto.ProfileRequestDto;
+import com.byebyechallan.dto.ProfileVehicleResponseDto;
+import com.byebyechallan.dto.VehicleRequestDto;
+import com.byebyechallan.entity.CoreProfileVehicleTr;
 import com.byebyechallan.entity.UserProfileTEntity;
+import com.byebyechallan.repository.ProfileVehicleRepository;
 import com.byebyechallan.repository.UserProfileRepository;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserProfileService {
 
   private final UserProfileRepository userProfileRepository;
+  private final ProfileVehicleRepository profileVehicleRepo;
 
-  public UserProfileService(UserProfileRepository userProfileRepository) {
+  public UserProfileService(UserProfileRepository userProfileRepository,
+      ProfileVehicleRepository profileVehicleRepo) {
     this.userProfileRepository = userProfileRepository;
+    this.profileVehicleRepo = profileVehicleRepo;
   }
 
   public ProfileDto createProfile(long userId, ProfileRequestDto profileRequestDto) {
@@ -48,5 +56,43 @@ public class UserProfileService {
       throw new RuntimeException("Error while fetching profiles: " + e.getMessage());
     }
     return profileDtos;
+  }
+
+  public ProfileVehicleResponseDto addVehicleToProfile(long profileId,
+      VehicleRequestDto vehicleRequestDto) {
+    ProfileVehicleResponseDto dto = null;
+    try {
+
+      Optional<UserProfileTEntity> userProfileT = userProfileRepository.findById(profileId);
+      if (userProfileT.isEmpty()) {
+        throw new RuntimeException("No such Profile Exist");
+      }
+      CoreProfileVehicleTr entity = CoreProfileVehicleTr.builder()
+          .profileId(profileId)
+          .vehicleName(vehicleRequestDto.getVehicleName())
+          .vehicleRegistrationNo(vehicleRequestDto.getVehicleRegistrationNumber())
+          .userProfile(userProfileT.get())
+          .build();
+      entity = profileVehicleRepo.save(entity);
+      dto = entity.getProfileVehicleDto();
+    } catch (Exception e) {
+      throw new RuntimeException("Unable to save Vehicle for Profile", e);
+    }
+
+    return dto;
+  }
+
+  public List<ProfileVehicleResponseDto> getAllProfileVehicle(long profileId) {
+    List<ProfileVehicleResponseDto> responseDtos = new ArrayList<>();
+    try {
+      List<CoreProfileVehicleTr> entities = profileVehicleRepo.getAllProfileVehicle(profileId,
+          false);
+      responseDtos = entities.stream()
+          .collect(ArrayList::new, (list, entity) -> list.add(entity.getProfileVehicleDto()),
+              ArrayList::addAll);
+    } catch (Exception e) {
+      throw new RuntimeException("Exception during fetch of Profile Vehicles");
+    }
+    return responseDtos;
   }
 }

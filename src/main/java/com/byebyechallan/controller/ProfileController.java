@@ -3,6 +3,8 @@ package com.byebyechallan.controller;
 
 import com.byebyechallan.dto.ProfileDto;
 import com.byebyechallan.dto.ProfileRequestDto;
+import com.byebyechallan.dto.ProfileVehicleResponseDto;
+import com.byebyechallan.dto.VehicleRequestDto;
 import com.byebyechallan.service.UserProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,6 +38,19 @@ public class ProfileController {
   @Operation(summary = "Get all Profile", description = "Get all Profile for a User")
   public List<ProfileDto> getAllProfile(@PathVariable("userId") long userId) {
     return profileService.getAllProfile(userId);
+  }
+
+  @PostMapping("/{profileId}/add-vehicle")
+  @Operation(summary = "Add Vehicle to Profile", description = "Add Vehicle to a User's Profile")
+  public ProfileVehicleResponseDto addVehicleToProfile(@PathVariable("profileId") long profileId,
+      @RequestBody VehicleRequestDto vehicleRequestDto) {
+    return profileService.addVehicleToProfile(profileId, vehicleRequestDto);
+  }
+
+  @GetMapping("/{profileId}/all-vehicle")
+  @Operation(summary = "Get all Vehicle for a Profile", description = "Get all Vehicle for a Profile")
+  private List<ProfileVehicleResponseDto> getAllProfileVehicle(@PathVariable("profileId") long profileId){
+    return profileService.getAllProfileVehicle(profileId);
   }
 
 }
