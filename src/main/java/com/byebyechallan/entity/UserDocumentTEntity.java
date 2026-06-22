@@ -1,5 +1,6 @@
 package com.byebyechallan.entity;
 
+import com.byebyechallan.dto.UserDocumentDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,20 +15,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Table(name = "user_document_t")
+
+@NamedQuery(name = "UserDocumentTEntity.getAllDocument",
+    query = "SELECT u FROM UserDocumentTEntity u " +
+        "WHERE u.isDeleted = :isDeleted " +
+        "AND u.userProfile.userId = :userId " +
+        "AND u.profileId = :profileId " +
+        "AND u.vehicleRegistrationNo = :vehicleRegistrationNo")
+
 public class UserDocumentTEntity {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Long id;
 
   @Column(name = "profile_id")
   private Long profileId;
 
+  @Column(name = "vehicle_registration_no")
+  private String vehicleRegistrationNo;
+
   @Column(name = "doc_template_id")
   private String docTemplateId;
-
-  @Column(name = "doc_holder_name")
-  private String docHolderName;
 
   @Column(name = "doc_name")
   private String docName;
@@ -69,5 +79,25 @@ public class UserDocumentTEntity {
   @JoinColumn(name = "profile_id", insertable = false, updatable = false)
   private UserProfileTEntity userProfile;
 
+  public UserDocumentDto getUserDocDto() {
+    return UserDocumentDto.builder()
+        .id(this.id)
+        .userId(this.userProfile.getUserId())
+        .profileId(this.profileId)
+        .vehicleRegistrationNo(this.vehicleRegistrationNo)
+        .docTemplateId(this.docTemplateId)
+        .docName(this.docName)
+        .docId(this.docId)
+        .s3Link(this.docS3Upload)
+        .uploadedDate(this.uploadedDate)
+        .expiryDate(this.expiryDate)
+        .isSms(this.isSms)
+        .isEmail(this.isEmail)
+        .isWhatsApp(this.isWhatsapp)
+        .notificationTime(this.notificationTime)
+        .createDate(this.createdTime)
+        .updatedDate(this.updatedTime)
+        .build();
+  }
 }
 

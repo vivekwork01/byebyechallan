@@ -1,18 +1,15 @@
 package com.byebyechallan.service;
 
-import static com.byebyechallan.utils.Utils.isBHRegistration;
-import static com.byebyechallan.utils.Utils.isStateRegistration;
-
-import com.byebyechallan.dto.CountryDto;
-import com.byebyechallan.dto.RegistrationDto;
-import com.byebyechallan.dto.StateDto;
+import com.byebyechallan.dto.DocumentRequestDto;
+import com.byebyechallan.dto.UserDocumentDto;
 import com.byebyechallan.entity.CoreDocumentEntity;
-import com.byebyechallan.repository.CountryStateRepository;
+import com.byebyechallan.entity.UserDocumentTEntity;
+import com.byebyechallan.entity.UserProfileTEntity;
 import com.byebyechallan.repository.DocumentRepository;
-import com.byebyechallan.repository.RegistrationTypeRepository;
+import com.byebyechallan.repository.UserDocumentRepository;
+import com.byebyechallan.repository.UserProfileRepository;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,36 +18,78 @@ import java.util.List;
 @Service
 public class DocumentService {
 
-  @Autowired
-  private DocumentRepository documentRepository;
+  private final DocumentRepository documentRepository;
+  private final UserProfileRepository profileRepository;
+  private final UserDocumentRepository userDocumentRepository;
 
-  @Autowired
-  private CountryStateRepository countryStateRepository;
+  public DocumentService(DocumentRepository documentRepository,
+      UserProfileRepository profileRepository, UserDocumentRepository userDocumentRepository) {
+    this.documentRepository = documentRepository;
+    this.profileRepository = profileRepository;
+    this.userDocumentRepository = userDocumentRepository;
+  }
 
-  @Autowired
-  private RegistrationTypeRepository registrationTypeRepository;
-
-  public List<CoreDocumentEntity> getDocument(String country, String state, String registrationType,
+  public List<CoreDocumentEntity> getDocumentList(String country, String state,
+      String registrationType,
       String vehicleType, String docType) {
-    Boolean isBh = isBHRegistration(registrationType);
-    Boolean isState = isStateRegistration(registrationType);
     String countryStateId = country + "-" + state;
 
     log.info(
-        "Fetching documents for countryStateId: {}, isBh: {}, isState: {}, vehicleType: {}, docType: {}",
-        countryStateId, isBh, isState, vehicleType, docType);
-    return documentRepository.findAllDocument(countryStateId, isBh, isState, vehicleType, docType);
+        "Fetching documents for countryStateId: {}, registrationType: {}, vehicleType: {}, docType: {}",
+        countryStateId, registrationType, vehicleType, docType);
+    return documentRepository.findAllDocument(countryStateId, registrationType, vehicleType,
+        docType);
   }
 
-  public List<CountryDto> getCountry() {
-    return countryStateRepository.getAllCountry(false);
+  public UserDocumentDto saveDocument(long userId, long profileId,
+      String vehicleRegistrationNo,
+      DocumentRequestDto documentRequestDto) {
+    UserProfileTEntity userProfileT;
+    UserDocumentTEntity userDocumentTEntity;
+    try {
+      userProfileT = profileRepository.findById(profileId)
+          .orElseThrow(() -> new RuntimeException("Profile not found with id: " + profileId));
+      if (userProfileT.getUserId() != userId) {
+        throw new RuntimeException("Profile does not belong to the user");
+      }
+
+      userDocumentTEntity = documentRequestDto.getUserDocEntity(profileId, vehicleRegistrationNo, userProfileT);
+      userDocumentTEntity = userDocumentRepository.save(userDocumentTEntity);
+      log.info("Document saved successfully for userId: {}, profileId: {}, docTemplateId: {}",
+          userId, profileId, documentRequestDto.getDocTemplateId());
+
+    } catch (RuntimeException e) {
+      log.error("Error occurred while Saving Doc: {}", e.getMessage());
+      throw new RuntimeException("Error occurred while Saving Doc: " + e.getMessage());
+    }
+    return userDocumentTEntity.getUserDocDto();
+
   }
 
-  public List<StateDto> getStates(String countryId) {
-    return countryStateRepository.getAllStateByCountryId(countryId, false);
-  }
+  public List<UserDocumentDto> getAllDocuments(long userId, long profileId,
+      String vehicleRegistrationNo) {
+    UserProfileTEntity userProfileT;
+    List<UserDocumentDto> userDocumentDtos = new ArrayList<>();
+    try {
+      userProfileT = profileRepository.findById(profileId)
+          .orElseThrow(() -> new RuntimeException("Profile not found with id: " + profileId));
+      if (userProfileT.getUserId() != userId) {
+        throw new RuntimeException("Profile does not belong to the user");
+      }
+      List<UserDocumentTEntity> documentTEntities = userDocumentRepository.getAllDocument(userId,
+          profileId, vehicleRegistrationNo, false);
 
-  public List<RegistrationDto> getAllRegistrationType(String countryId) {
-    return registrationTypeRepository.getByCountryIdAndIsDeleted(countryId, false);
+      userDocumentDtos = documentTEntities.stream().collect(
+          ArrayList::new,
+          (list, entity) -> list.add(entity.getUserDocDto()),
+          ArrayList::addAll
+      );
+
+    } catch (RuntimeException e) {
+      log.error("Unable to fetch the document for userId: {}, profileId: {}, registrationNo: {}",
+          userId, profileId, vehicleRegistrationNo);
+      throw new RuntimeException("failed to fetch", e);
+    }
+    return userDocumentDtos;
   }
 }

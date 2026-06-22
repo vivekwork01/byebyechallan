@@ -4,7 +4,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
   private static final String SECRET_KEY = "bW9yZV9zZWNyZXRfa2V5X3dpdGhfaGlnaF9lbnRyb3B5XzEyMzQ1Njc4OTBfQUJDREVG";
-  private static final long EXPIRATION_TIME_MS = 1000 * 60 * 60 * 24; // 24 hours
+  private static final long EXPIRATION_TIME_MS = 1000 * 60 * 60; // 1 hours
   private static final long CLOCK_SKEW_MS = 1000 * 60 * 5; // 5 minutes clock skew tolerance
 
   public String generateToken(UserDetails userDetails) {

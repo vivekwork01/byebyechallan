@@ -20,10 +20,9 @@ import lombok.NoArgsConstructor;
     query = "SELECT c FROM CoreDocumentEntity c " +
         "WHERE c.isDeleted = false " +
         "AND c.countryStateEntity.countryStateId = :countryStateId " +
-        "AND c.isBH = :isBH " +
-        "AND c.isState = :isState " +
+        "AND c.registrationCode = :registrationCode " +
         "AND c.vehicleTypeEntity.vehicleTypeId = :vehicleType " +
-        "AND c.docType = :docType"
+        "AND (:docType IS NULL OR c.docType = :docType)"
 )
 public class CoreDocumentEntity {
 
@@ -34,11 +33,8 @@ public class CoreDocumentEntity {
   @Column(name = "doc_name")
   private String docName;
 
-  @Column(name = "is_bh")
-  private Boolean isBH;
-
-  @Column(name = "is_state")
-  private Boolean isState;
+  @Column(name = "registration_code")
+  private String registrationCode;
 
   @Column(name = "doc_type")
   private String docType;

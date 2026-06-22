@@ -1,16 +1,20 @@
 package com.byebyechallan.auth.controller;
 
-import com.byebyechallan.auth.dao.AuthResponse;
-import com.byebyechallan.auth.dao.LoginRequest;
-import com.byebyechallan.auth.dao.RegisterRequest;
+import com.byebyechallan.auth.dto.AuthResponse;
+import com.byebyechallan.auth.dto.LoginRequest;
+import com.byebyechallan.auth.dto.RegisterRequest;
 import com.byebyechallan.auth.entity.CoreUserMEntity;
 import com.byebyechallan.auth.entity.RefreshTokenEntity;
-import com.byebyechallan.auth.dao.TokenRefreshRequest;
+import com.byebyechallan.auth.dto.TokenRefreshRequest;
 import com.byebyechallan.auth.enums.Role;
 import com.byebyechallan.auth.repository.UserRepository;
 import com.byebyechallan.auth.service.JwtService;
 import com.byebyechallan.auth.service.RefreshTokenService;
 import com.byebyechallan.auth.service.UserService;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@Tag(name = "Auth Manager", description = "Endpoints for user authentication and registration")
 @Slf4j
 public class AuthenticationController {
 
@@ -47,6 +52,7 @@ public class AuthenticationController {
   }
 
    @PostMapping("/register")
+   @Operation(summary = "Register a New User", description = "Registers a new user with the provided details. Returns a success message if registration is successful, or an error message if the user already exists.")
    public ResponseEntity<?> register(@RequestBody RegisterRequest request){
 
      log.info("Registering user with email: {}", request.getEmail());
@@ -69,6 +75,7 @@ public class AuthenticationController {
    }
 
   @PostMapping("/login")
+  @Operation(summary = "User Login", description = "Login user with given details")
   public AuthResponse authenticate(@RequestBody LoginRequest request) {
     authManager.authenticate(
         new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
@@ -82,6 +89,7 @@ public class AuthenticationController {
   }
 
   @PutMapping("/refresh-token")
+  @Hidden
   public AuthResponse refresh(@RequestBody TokenRefreshRequest request) {
     String refreshToken = request.getRefreshToken();
 

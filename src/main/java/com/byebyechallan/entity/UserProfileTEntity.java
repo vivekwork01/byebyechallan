@@ -1,5 +1,6 @@
 package com.byebyechallan.entity;
 
+import com.byebyechallan.dto.ProfileDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Table(name = "user_profile_t")
+
+@NamedQuery(name = "UserProfileTEntity.getAllProfile",
+    query = "SELECT u FROM UserProfileTEntity u WHERE u.userId = :userId AND u.isDeleted = false")
 public class UserProfileTEntity {
 
   @Id
@@ -33,5 +37,12 @@ public class UserProfileTEntity {
   @Column(name = "created_time")
   private Timestamp createdTime;
 
+  public ProfileDto getProfileDto() {
+    return ProfileDto.builder()
+        .id(this.id)
+        .userId(this.userId)
+        .profileName(this.name)
+        .build();
+  }
 }
 

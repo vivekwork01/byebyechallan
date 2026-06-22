@@ -353,10 +353,10 @@ CREATE TABLE user_profile_t
 
 CREATE TABLE user_document_t
 (
-    id                INT PRIMARY KEY,
+    id                INT PRIMARY KEY AUTO_INCREMENT,
     profile_id        LONG         NOT NULL,
+    vehicle_registration_no VARCHAR(128) NOT NULL,
     doc_template_id   VARCHAR(255) NOT NULL,
-    doc_holder_name   VARCHAR(255) NOT NULL,
     doc_name          VARCHAR(255) NOT NULL,
     doc_id            VARCHAR(128) NOT NULL,
     doc_s3_upload     VARCHAR(255) NOT NULL,

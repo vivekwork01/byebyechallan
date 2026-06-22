@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface DocumentRepository extends JpaRepository<CoreDocumentEntity, Long> {
 
 
-  List<CoreDocumentEntity> findAllDocument(String countryStateId, Boolean isBH,
-      Boolean isState, String vehicleType, String docType);
+  List<CoreDocumentEntity> findAllDocument(String countryStateId, String registrationCode,
+      String vehicleType, String docType);
 }

@@ -1,4 +1,4 @@
-package com.byebyechallan.auth.dao;
+package com.byebyechallan.auth.dto;
 
 import lombok.Getter;
 import lombok.Setter;
