@@ -20,8 +20,18 @@ public class JwtService {
   private static final long CLOCK_SKEW_MS = 1000 * 60 * 5; // 5 minutes clock skew tolerance
 
   public String generateToken(UserDetails userDetails) {
+    // Backwards-compatible method: includes roles but not userId. Prefer generateToken(userDetails, userId).
     Map<String, Object> claims = new HashMap<>();
     claims.put("roles", userDetails.getAuthorities().toString());
+    return generateToken(claims, userDetails);
+  }
+
+  public String generateToken(UserDetails userDetails, Long userId) {
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("roles", userDetails.getAuthorities().toString());
+    if (userId != null) {
+      claims.put("userId", userId);
+    }
     return generateToken(claims, userDetails);
   }
 
