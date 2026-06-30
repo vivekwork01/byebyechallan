@@ -80,7 +80,7 @@ public class AuthenticationController {
     authManager.authenticate(
         new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
     final UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
-    CoreUserMEntity user = userRepository.findByEmailAndIsDeleted(request.getUsername(), false)
+    CoreUserMEntity user = userRepository.findByEmailAndDeleted(request.getUsername(), false)
         .orElseThrow(() -> new UsernameNotFoundException("User Not found: " + request.getUsername()));
     String jwtToken = jwtService.generateToken(userDetails, user.getId());
     RefreshTokenEntity refreshToken = refreshTokenService.createRefreshToken(request.getUsername());

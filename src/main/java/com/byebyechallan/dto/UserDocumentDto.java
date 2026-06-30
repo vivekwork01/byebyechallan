@@ -21,13 +21,13 @@ public class UserDocumentDto {
   private String s3Link;
   private Timestamp uploadedDate;
   private Timestamp expiryDate;
-  private boolean isSms;
-  private boolean isEmail;
-  private boolean isWhatsApp;
+  private boolean uploaded;
+  private boolean sms;
+  private boolean email;
+  private boolean whatsApp;
   private Timestamp notificationTime;
   private Timestamp createDate;
   private Timestamp updatedDate;
-
 
 
 }

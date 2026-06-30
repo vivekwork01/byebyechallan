@@ -29,7 +29,7 @@ public class MasterService {
   }
 
   public List<RegistrationDto> getAllRegistrationType(String countryId) {
-    return registrationTypeRepository.getByCountryIdAndIsDeleted(countryId, false);
+    return registrationTypeRepository.getByCountryIdAndDeleted(countryId, false);
   }
 
 }

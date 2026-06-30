@@ -1,11 +1,15 @@
 package com.byebyechallan.service;
 
+import com.byebyechallan.dto.DocumentRequestDto;
 import com.byebyechallan.dto.ProfileDto;
 import com.byebyechallan.dto.ProfileRequestDto;
 import com.byebyechallan.dto.ProfileVehicleResponseDto;
+import com.byebyechallan.dto.UserDocumentDto;
 import com.byebyechallan.dto.VehicleRequestDto;
+import com.byebyechallan.entity.CoreDocumentEntity;
 import com.byebyechallan.entity.CoreProfileVehicleTr;
 import com.byebyechallan.entity.UserProfileTEntity;
+import com.byebyechallan.repository.DocumentRepository;
 import com.byebyechallan.repository.ProfileVehicleRepository;
 import com.byebyechallan.repository.UserProfileRepository;
 import java.sql.Timestamp;
@@ -13,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,11 +25,13 @@ public class UserProfileService {
 
   private final UserProfileRepository userProfileRepository;
   private final ProfileVehicleRepository profileVehicleRepo;
+  private final DocumentService documentService;
 
   public UserProfileService(UserProfileRepository userProfileRepository,
-      ProfileVehicleRepository profileVehicleRepo) {
+      ProfileVehicleRepository profileVehicleRepo, DocumentService documentService) {
     this.userProfileRepository = userProfileRepository;
     this.profileVehicleRepo = profileVehicleRepo;
+    this.documentService = documentService;
   }
 
   public ProfileDto createProfile(long userId, ProfileRequestDto profileRequestDto) {
@@ -34,7 +41,7 @@ public class UserProfileService {
       UserProfileTEntity userProfileTEntity = UserProfileTEntity.builder()
           .name(profileRequestDto.getProfileName())
           .userId(userId)
-          .isDeleted(false)
+          .deleted(false)
           .createdTime(Timestamp.from(new Date().toInstant()))
           .build();
       userProfileTEntity = userProfileRepository.save(userProfileTEntity);
@@ -58,7 +65,7 @@ public class UserProfileService {
     return profileDtos;
   }
 
-  public ProfileVehicleResponseDto addVehicleToProfile(long profileId,
+  public ProfileVehicleResponseDto addVehicleToProfile(long profileId, String vehicleRegistrationNo,
       VehicleRequestDto vehicleRequestDto) {
     ProfileVehicleResponseDto dto = null;
     try {
@@ -75,6 +82,16 @@ public class UserProfileService {
           .build();
       entity = profileVehicleRepo.save(entity);
       dto = entity.getProfileVehicleDto();
+
+      // saving documents
+      List<UserDocumentDto> savedDoc = null;
+      CoreProfileVehicleTr finalEntity = entity;
+      savedDoc = vehicleRequestDto.getDocuments().stream()
+          .map(input -> documentService.saveDocument(
+              finalEntity.getUserProfile().getUserId(), profileId, vehicleRegistrationNo, input))
+          .toList();
+      dto.setDocs(savedDoc);
+
     } catch (Exception e) {
       throw new RuntimeException("Unable to save Vehicle for Profile", e);
     }

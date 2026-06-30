@@ -45,7 +45,7 @@ public class CoreUserMEntity {
 
   @Builder.Default
   @Column(name = "is_deleted")
-  private Boolean isDeleted = false;
+  private Boolean deleted = false;
 
   @Column(name = "created_time")
   private Timestamp createdTime;
@@ -55,7 +55,7 @@ public class CoreUserMEntity {
 
   @PrePersist
   protected void onCreate() {
-    if (isDeleted == null) isDeleted = false;
+    if (deleted == null) deleted = false;
     if (createdTime == null) createdTime = new Timestamp(System.currentTimeMillis());
     updatedTime = createdTime;
   }

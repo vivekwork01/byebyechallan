@@ -24,7 +24,7 @@ public class CoreVehicleCategoryEntity {
     private String vehicleCategoryName;
 
     @Column(name = "is_deleted")
-    private Boolean isDeleted;
+    private Boolean deleted;
 
     @Column(name="created_by")
     private long createdBy;

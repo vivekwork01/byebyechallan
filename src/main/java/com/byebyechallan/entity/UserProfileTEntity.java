@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "user_profile_t")
 
 @NamedQuery(name = "UserProfileTEntity.getAllProfile",
-    query = "SELECT u FROM UserProfileTEntity u WHERE u.userId = :userId AND u.isDeleted = false")
+    query = "SELECT u FROM UserProfileTEntity u WHERE u.userId = :userId AND u.deleted = false")
 public class UserProfileTEntity {
 
   @Id
@@ -32,7 +32,7 @@ public class UserProfileTEntity {
   private String name;
 
   @Column(name = "is_deleted")
-  private Boolean isDeleted;
+  private Boolean deleted;
 
   @Column(name = "created_time")
   private Timestamp createdTime;

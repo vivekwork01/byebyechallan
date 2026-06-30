@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @NamedQuery(name = "CoreProfileVehicleTr.getAllProfileVehicle",
     query = "SELECT ent FROM CoreProfileVehicleTr ent "
         + "WHERE ent.profileId=:profileId "
-        + "AND ent.isDeleted=:isDeleted")
+        + "AND ent.deleted=:isDeleted")
 public class CoreProfileVehicleTr {
 
   @Id
@@ -38,7 +38,7 @@ public class CoreProfileVehicleTr {
   private String vehicleRegistrationNo;
 
   @Column(name = "is_deleted", nullable = false)
-  private Boolean isDeleted = false;
+  private Boolean deleted = false;
 
   @Column(name = "created_time", updatable = false)
   private LocalDateTime createdTime;
@@ -55,7 +55,7 @@ public class CoreProfileVehicleTr {
     LocalDateTime now = LocalDateTime.now();
     this.createdTime = now;
     this.updatedTime = now;
-    this.isDeleted=false;
+    this.deleted = false;
   }
 
   @PreUpdate

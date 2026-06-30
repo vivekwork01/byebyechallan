@@ -40,16 +40,18 @@ public class ProfileController {
     return profileService.getAllProfile(userId);
   }
 
-  @PostMapping("/{profileId}/add-vehicle")
+  @PostMapping("/{profileId}/add-vehicle/{vehicleRegistrationNo}")
   @Operation(summary = "Add Vehicle to Profile", description = "Add Vehicle to a User's Profile")
   public ProfileVehicleResponseDto addVehicleToProfile(@PathVariable("profileId") long profileId,
+      @PathVariable("vehicleRegistrationNo") String vehicleRegistrationNo,
       @RequestBody VehicleRequestDto vehicleRequestDto) {
-    return profileService.addVehicleToProfile(profileId, vehicleRequestDto);
+    return profileService.addVehicleToProfile(profileId, vehicleRegistrationNo, vehicleRequestDto);
   }
 
   @GetMapping("/{profileId}/all-vehicle")
   @Operation(summary = "Get all Vehicle for a Profile", description = "Get all Vehicle for a Profile")
-  private List<ProfileVehicleResponseDto> getAllProfileVehicle(@PathVariable("profileId") long profileId){
+  private List<ProfileVehicleResponseDto> getAllProfileVehicle(
+      @PathVariable("profileId") long profileId) {
     return profileService.getAllProfileVehicle(profileId);
   }
 

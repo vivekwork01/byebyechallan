@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<CoreUserMEntity, Long> {
-    Optional<CoreUserMEntity> findByEmailAndIsDeleted(String email, Boolean isDeleted);
+    Optional<CoreUserMEntity> findByEmailAndDeleted(String email, Boolean isDeleted);
 }

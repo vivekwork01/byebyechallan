@@ -29,7 +29,7 @@ public class DocumentService {
     this.userDocumentRepository = userDocumentRepository;
   }
 
-  public List<CoreDocumentEntity> getDocumentList(String country, String state,
+  public List<DocumentRequestDto> getDocumentList(String country, String state,
       String registrationType,
       String vehicleType, String docType) {
     String countryStateId = country + "-" + state;
@@ -37,8 +37,13 @@ public class DocumentService {
     log.info(
         "Fetching documents for countryStateId: {}, registrationType: {}, vehicleType: {}, docType: {}",
         countryStateId, registrationType, vehicleType, docType);
-    return documentRepository.findAllDocument(countryStateId, registrationType, vehicleType,
+    List<CoreDocumentEntity> documentEntityList = documentRepository.findAllDocument(countryStateId,
+        registrationType, vehicleType,
         docType);
+    return documentEntityList.stream().collect(
+        ArrayList::new,
+        (list, entity) -> list.add(entity.getReqDoc()), ArrayList::addAll
+    );
   }
 
   public UserDocumentDto saveDocument(long userId, long profileId,
@@ -53,7 +58,8 @@ public class DocumentService {
         throw new RuntimeException("Profile does not belong to the user");
       }
 
-      userDocumentTEntity = documentRequestDto.getUserDocEntity(profileId, vehicleRegistrationNo, userProfileT);
+      userDocumentTEntity = documentRequestDto.getUserDocEntity(profileId, vehicleRegistrationNo,
+          userProfileT);
       userDocumentTEntity = userDocumentRepository.save(userDocumentTEntity);
       log.info("Document saved successfully for userId: {}, profileId: {}, docTemplateId: {}",
           userId, profileId, documentRequestDto.getDocTemplateId());

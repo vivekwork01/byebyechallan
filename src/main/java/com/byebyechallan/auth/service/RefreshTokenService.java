@@ -28,7 +28,7 @@ public class RefreshTokenService {
   }
 
   public RefreshTokenEntity createRefreshToken(String emailId) {
-    var user = userRepository.findByEmailAndIsDeleted(emailId, false)
+    var user = userRepository.findByEmailAndDeleted(emailId, false)
         .orElseThrow(() -> new RuntimeException("User not found: " + emailId));
     refreshTokenRepository.deleteByUser(user);
 

@@ -21,13 +21,15 @@ public class DocumentRequestDto {
   private String docTemplateId;
   private String docName;
   private String docId;
-  private boolean isSms;
-  private boolean isEmail;
-  private boolean isWhatsApp;
+  private boolean sms;
+  private boolean email;
+  private boolean whatsApp;
   private Timestamp expiryDate;
   private Timestamp notificationTime;
+  private boolean uploaded;
 
-  public UserDocumentTEntity getUserDocEntity(Long profileId, String vehicleRegistrationNo, UserProfileTEntity userProfileT) {
+  public UserDocumentTEntity getUserDocEntity(Long profileId, String vehicleRegistrationNo,
+      UserProfileTEntity userProfileT) {
     return UserDocumentTEntity.builder()
         .profileId(profileId)
         .docTemplateId(this.docTemplateId)
@@ -36,12 +38,15 @@ public class DocumentRequestDto {
         .vehicleRegistrationNo(vehicleRegistrationNo)
         .expiryDate(this.expiryDate)
         .uploadedDate(Timestamp.from(new Date().toInstant()))
-        .docS3Upload("url_xxx") // Placeholder for S3 upload URL, should be replaced with actual logic to upload and get the URL
+        .docS3Upload(
+            "url_xxx") // Placeholder for S3 upload URL, should be replaced with actual logic to upload and get the URL
         .notificationTime(this.notificationTime)
-        .isSms(this.isSms)
-        .isEmail(this.isEmail)
-        .isWhatsapp(this.isWhatsApp)
-        .isDeleted(false)
+        .uploaded(this.uploaded)
+        .sms(this.sms)
+        .email(this.email)
+        .whatsapp(this.whatsApp)
+        .sms(false)
+        .deleted(false)
         .createdTime(Timestamp.from(new Date().toInstant()))
         .updatedTime(Timestamp.from(new Date().toInstant()))
         .userProfile(userProfileT)

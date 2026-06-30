@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Table(name = "core_registration_type_m")
-@NamedQuery(name = "CoreRegistrationTypeEntity.getByCountryIdAndIsDeleted", query = "SELECT crt.registrationCode registrationCode, crt.registrationType registrationType FROM CoreRegistrationTypeEntity crt WHERE crt.countryId=:countryId AND crt.isDeleted=:isDeleted", resultClass = RegistrationDto.class)
+@NamedQuery(name = "CoreRegistrationTypeEntity.getByCountryIdAndDeleted", query = "SELECT crt.registrationCode registrationCode, crt.registrationType registrationType FROM CoreRegistrationTypeEntity crt WHERE crt.countryId=:countryId AND crt.deleted=:isDeleted", resultClass = RegistrationDto.class)
 public class CoreRegistrationTypeEntity {
 
   @Id
@@ -29,6 +29,6 @@ public class CoreRegistrationTypeEntity {
   public String registrationType;
 
   @Column(name = "is_deleted")
-  public Boolean isDeleted;
+  public Boolean deleted;
 
 }

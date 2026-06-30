@@ -29,7 +29,7 @@ public class DocumentController {
 
   @GetMapping("/list")
   @Operation(summary = "Get the Document List", description = "Get the document list for a selected country, state, registration vehicle")
-  public List<CoreDocumentEntity> getDocumentList(
+  public List<DocumentRequestDto> getDocumentList(
       @RequestParam(name = "country", required = true) String country,
       @RequestParam(name = "state", required = true) String state,
       @RequestParam(name = "registration_type", required = true) String registrationType,
@@ -39,7 +39,7 @@ public class DocumentController {
   }
 
   @PostMapping("/{userId}/profile/{profileId}/registration/{vehicleRegistrationNo}")
-  @Operation(summary="Save Document for a Profile", description = "Save the document for Profile of a User")
+  @Operation(summary = "Save Document for a Profile Vehicle", description = "Save the document for Profile Vehicle of a User")
   public UserDocumentDto saveDocument(@PathVariable("userId") long userId,
       @PathVariable("profileId") long profileId,
       @PathVariable("vehicleRegistrationNo") String vehicleRegistrationNo,
@@ -49,7 +49,7 @@ public class DocumentController {
   }
 
   @GetMapping("/{userId}/profile/{profileId}/registration/{vehicleRegistrationNo}")
-  @Operation(summary = "Get all the Documents for a Profile", description = "Retrieve all documents associated with a specific profile")
+  @Operation(summary = "Get all the Documents for a Profile Vehicle", description = "Retrieve all documents associated with a specific profile")
   public List<UserDocumentDto> getAllDocuments(@PathVariable("userId") long userId,
       @PathVariable("profileId") long profileId,
       @PathVariable("vehicleRegistrationNo") String vehicleRegistrationNo) {

@@ -398,3 +398,7 @@ CREATE TABLE core_profile_vehicle_tr
     created_time            TIMESTAMP             DEFAULT NOW(),
     updated_time            TIMESTAMP             DEFAULT NOW()
 );
+
+-- adding is document uploaded as we will add all the doc during the profile vehicle creation itself
+ALTER TABLE user_document_t
+    ADD COLUMN is_uploaded TINYINT DEFAULT False AFTER notification_time;

@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RegistrationTypeRepository extends JpaRepository<CoreRegistrationTypeEntity, Long> {
 
-  List<RegistrationDto> getByCountryIdAndIsDeleted(String countryId, boolean isDeleted);
+  List<RegistrationDto> getByCountryIdAndDeleted(String countryId, boolean isDeleted);
 }

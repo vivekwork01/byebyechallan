@@ -1,6 +1,9 @@
 package com.byebyechallan.entity;
 
+import com.byebyechallan.dto.DocumentRequestDto;
+import com.byebyechallan.dto.UserDocumentDto;
 import jakarta.persistence.*;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NamedQuery(
     name = "CoreDocumentEntity.findAllDocument",
     query = "SELECT c FROM CoreDocumentEntity c " +
-        "WHERE c.isDeleted = false " +
+        "WHERE c.deleted = false " +
         "AND c.countryStateEntity.countryStateId = :countryStateId " +
         "AND c.registrationCode = :registrationCode " +
         "AND c.vehicleTypeEntity.vehicleTypeId = :vehicleType " +
@@ -40,7 +43,7 @@ public class CoreDocumentEntity {
   private String docType;
 
   @Column(name = "is_deleted")
-  private Boolean isDeleted;
+  private Boolean deleted;
 
   @Column(name = "created_by")
   private long createdBy;
@@ -59,5 +62,17 @@ public class CoreDocumentEntity {
       updatable = false)
   private CoreVehicleTypeEntity vehicleTypeEntity;
 
-
+  public DocumentRequestDto getReqDoc() {
+    return DocumentRequestDto.builder()
+        .docTemplateId(this.docId)
+        .docName(this.docName)
+        .docId(this.docId)
+        .sms(false)
+        .email(false)
+        .whatsApp(false)
+        .expiryDate(Timestamp.from(Instant.now()))
+        .notificationTime(Timestamp.from(Instant.now()))
+        .uploaded(false)
+        .build();
+  }
 }

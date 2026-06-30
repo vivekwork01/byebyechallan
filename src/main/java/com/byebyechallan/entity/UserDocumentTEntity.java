@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 
 @NamedQuery(name = "UserDocumentTEntity.getAllDocument",
     query = "SELECT u FROM UserDocumentTEntity u " +
-        "WHERE u.isDeleted = :isDeleted " +
+        "WHERE u.deleted = :isDeleted " +
         "AND u.userProfile.userId = :userId " +
         "AND u.profileId = :profileId " +
         "AND u.vehicleRegistrationNo = :vehicleRegistrationNo")
@@ -55,19 +55,22 @@ public class UserDocumentTEntity {
   private Timestamp expiryDate;
 
   @Column(name = "is_sms")
-  private Boolean isSms;
+  private Boolean sms;
 
   @Column(name = "is_email")
-  private Boolean isEmail;
+  private Boolean email;
 
   @Column(name = "is_whatsapp")
-  private Boolean isWhatsapp;
+  private Boolean whatsapp;
 
   @Column(name = "notification_time")
   private Timestamp notificationTime;
 
+  @Column(name = "is_uploaded")
+  private Boolean uploaded;
+
   @Column(name = "is_deleted")
-  private Boolean isDeleted;
+  private Boolean deleted;
 
   @Column(name = "created_time")
   private Timestamp createdTime;
@@ -91,9 +94,10 @@ public class UserDocumentTEntity {
         .s3Link(this.docS3Upload)
         .uploadedDate(this.uploadedDate)
         .expiryDate(this.expiryDate)
-        .isSms(this.isSms)
-        .isEmail(this.isEmail)
-        .isWhatsApp(this.isWhatsapp)
+        .uploaded(this.uploaded)
+        .sms(this.sms)
+        .email(this.email)
+        .whatsApp(this.whatsapp)
         .notificationTime(this.notificationTime)
         .createDate(this.createdTime)
         .updatedDate(this.updatedTime)

@@ -23,10 +23,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "core_country_state_m")
 
 @NamedQuery(name = "CoreCountryStateEntity.getAllStateByCountryId",
-    query = "SELECT c.countryStateId, c.countryId, c.stateId, c.countryName, c.stateName FROM CoreCountryStateEntity c WHERE c.countryId=:countryId AND c.isDeleted=:isDeleted",
+    query = "SELECT c.countryStateId, c.countryId, c.stateId, c.countryName, c.stateName FROM CoreCountryStateEntity c WHERE c.countryId=:countryId AND c.deleted=:isDeleted",
     resultClass = StateDto.class)
 @NamedQuery(name = "CoreCountryStateEntity.getAllCountry",
-    query = "SELECT DISTINCT c.countryId, c.countryStateId, c.countryName FROM CoreCountryStateEntity c WHERE c.isDeleted=:isDeleted",
+    query = "SELECT DISTINCT c.countryId, c.countryStateId, c.countryName FROM CoreCountryStateEntity c WHERE c.deleted=:isDeleted",
     resultClass = CountryDto.class)
 
 public class CoreCountryStateEntity {
@@ -48,7 +48,7 @@ public class CoreCountryStateEntity {
   private String stateName;
 
   @Column(name = "is_deleted")
-  private Boolean isDeleted;
+  private Boolean deleted;
 
   @Column(name = "created_by")
   private long createdBy;
