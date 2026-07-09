@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
     query = "SELECT c.countryStateId, c.countryId, c.stateId, c.countryName, c.stateName FROM CoreCountryStateEntity c WHERE c.countryId=:countryId AND c.deleted=:isDeleted",
     resultClass = StateDto.class)
 @NamedQuery(name = "CoreCountryStateEntity.getAllCountry",
-    query = "SELECT DISTINCT c.countryId, c.countryStateId, c.countryName FROM CoreCountryStateEntity c WHERE c.deleted=:isDeleted",
+    query = "SELECT c.countryId, MIN(c.countryStateId), MIN(c.countryName) FROM CoreCountryStateEntity c WHERE c.deleted=:isDeleted GROUP BY c.countryId",
     resultClass = CountryDto.class)
 
 public class CoreCountryStateEntity {

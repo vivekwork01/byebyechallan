@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class StateDto {
+
   public String countryStateId;
   public String countryId;
   public String stateId;

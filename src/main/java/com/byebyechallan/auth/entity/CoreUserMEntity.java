@@ -55,8 +55,12 @@ public class CoreUserMEntity {
 
   @PrePersist
   protected void onCreate() {
-    if (deleted == null) deleted = false;
-    if (createdTime == null) createdTime = new Timestamp(System.currentTimeMillis());
+    if (deleted == null) {
+      deleted = false;
+    }
+    if (createdTime == null) {
+      createdTime = new Timestamp(System.currentTimeMillis());
+    }
     updatedTime = createdTime;
   }
 

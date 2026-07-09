@@ -318,12 +318,12 @@ CREATE TABLE core_registration_type_m
 );
 
 INSERT INTO core_registration_type_m (registration_code, registration_type, country_id)
-VALUES ('IN_STATE', 'India State Registration', 'IN'),
-       ('IN_BH', 'Bharat Series Registration', 'IN'),
-       ('US_STATE', 'US State Registration', 'US'),
-       ('GB_STANDARD', 'UK Standard Registration', 'GB'),
-       ('DE_STANDARD', 'Germany Standard Registration', 'DE'),
-       ('AE_STANDARD', 'UAE Standard Registration', 'AE');
+VALUES ('IN-STATE', 'India State Registration', 'IN'),
+       ('IN-BH', 'Bharat Series Registration', 'IN'),
+       ('US-STATE', 'US State Registration', 'US'),
+       ('GB-STANDARD', 'UK Standard Registration', 'GB'),
+       ('DE-STANDARD', 'Germany Standard Registration', 'DE'),
+       ('AE-STANDARD', 'UAE Standard Registration', 'AE');
 
 
 CREATE TABLE core_user_m
@@ -402,3 +402,6 @@ CREATE TABLE core_profile_vehicle_tr
 -- adding is document uploaded as we will add all the doc during the profile vehicle creation itself
 ALTER TABLE user_document_t
     ADD COLUMN is_uploaded TINYINT DEFAULT False AFTER notification_time;
+
+
+UPDATE `byebyechallan`.`core_country_state_m` SET `country_name` = 'INDIA' WHERE (`country_state_id` LIKE  'IN%');

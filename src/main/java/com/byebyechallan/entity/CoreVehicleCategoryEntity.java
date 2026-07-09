@@ -16,19 +16,19 @@ import lombok.NoArgsConstructor;
 @Table(name = "core_vehicle_category_m")
 public class CoreVehicleCategoryEntity {
 
-    @Id
-    @Column(name="vehicle_category_id")
-    private String vehicleCategoryId;
+  @Id
+  @Column(name = "vehicle_category_id")
+  private String vehicleCategoryId;
 
-    @Column(name="vehicle_category_name")
-    private String vehicleCategoryName;
+  @Column(name = "vehicle_category_name")
+  private String vehicleCategoryName;
 
-    @Column(name = "is_deleted")
-    private Boolean deleted;
+  @Column(name = "is_deleted")
+  private Boolean deleted;
 
-    @Column(name="created_by")
-    private long createdBy;
+  @Column(name = "created_by")
+  private long createdBy;
 
-    @Column(name = "created_time")
-    private java.sql.Timestamp createdTime;
+  @Column(name = "created_time")
+  private java.sql.Timestamp createdTime;
 }

@@ -3,6 +3,7 @@ package com.byebyechallan.controller;
 import com.byebyechallan.dto.CountryDto;
 import com.byebyechallan.dto.RegistrationDto;
 import com.byebyechallan.dto.StateDto;
+import com.byebyechallan.dto.VehicleTypeResponseDto;
 import com.byebyechallan.service.MasterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,6 +40,12 @@ public class MasterController {
   @Operation(summary = "Get all Registration Type for a Country", description = "Get all Registration Type for a Country")
   public List<RegistrationDto> getAllRegistrationType(@PathVariable("countryId") String countryId) {
     return masterService.getAllRegistrationType(countryId);
+  }
+
+  @GetMapping("/vehicle-type")
+  @Operation(summary = "Get all Vehicle Type", description = "Get all Vehicle Type")
+  public List<VehicleTypeResponseDto> getAllVehicleType() {
+    return masterService.getAllVehicleType();
   }
 
 }

@@ -1,5 +1,7 @@
 package com.byebyechallan.entity;
 
+import com.byebyechallan.dto.RegistrationDto;
+import com.byebyechallan.dto.VehicleTypeResponseDto;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -14,6 +16,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Table(name = "core_vehicle_type_m")
+
+@NamedQuery(name = "CoreVehicleTypeEntity.getAllVehicleType", query = "SELECT crt.vehicleTypeId vehicleTypeId, crt.vehicleTypeName vehicleTypeName FROM CoreVehicleTypeEntity crt WHERE crt.deleted=:isDeleted", resultClass = VehicleTypeResponseDto.class)
 public class CoreVehicleTypeEntity {
 
     @Id

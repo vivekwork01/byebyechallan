@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegistrationDto {
+
   public String registrationCode;
   public String registrationType;
 

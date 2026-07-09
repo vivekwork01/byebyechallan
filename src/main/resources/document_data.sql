@@ -4462,3 +4462,6 @@ VALUES ('DOC_DN_BIKE_REGISTRATION_CERTIFICATE_RC_0001', 'Registration Certificat
        ('DOC_DN_AMBULANCE_FIRST_AID_AND_LIFE_SUPPORT_EQUIPMENT_LIS_0009', 'First Aid and Life Support Equipment List', 'MANDATORY', 'IN-STATE', 'IN-DN', 'AMBULANCE', 0, 0),
        ('DOC_DN_AMBULANCE_OPERATOR___ORGANISATION_REGISTRATION_CER_0010', 'Operator / Organisation Registration Certificate', 'MANDATORY', 'IN-STATE', 'IN-DN', 'AMBULANCE', 0, 0),
        ('DOC_DN_AMBULANCE_DRIVER_MEDICAL_FITNESS_CERTIFICATE_0011', 'Driver Medical Fitness Certificate', 'OPTIONAL', 'IN-STATE', 'IN-DN', 'AMBULANCE', 0, 0);
+
+ALTER TABLE `byebyechallan`.`core_document_m`
+    ADD COLUMN `notification_time` TIMESTAMP NOT NULL DEFAULT NOW() AFTER `vehicle_type_id`;
