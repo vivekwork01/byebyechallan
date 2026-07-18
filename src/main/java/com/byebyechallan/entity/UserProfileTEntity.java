@@ -16,8 +16,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @Table(name = "user_profile_t")
 
-@NamedQuery(name = "UserProfileTEntity.getAllProfile",
-    query = "SELECT u FROM UserProfileTEntity u WHERE u.userId = :userId AND u.deleted = false")
+@NamedNativeQuery(name = "UserProfileTEntity.getAllProfile",
+    query = "SELECT pt.id id, pt.user_id user_id, pt.name profile_name, COUNT(DISTINCT dt.vehicle_registration_no) vehicle_count "
+        + "FROM user_profile_t pt "
+        + "JOIN user_document_t dt ON dt.profile_id=pt.id AND pt.is_deleted=0 and dt.is_deleted=0 "
+        + "where pt.user_id=:userId GROUP BY pt.id",
+    resultClass = ProfileDto.class)
 public class UserProfileTEntity {
 
   @Id
@@ -42,6 +46,7 @@ public class UserProfileTEntity {
         .id(this.id)
         .userId(this.userId)
         .profileName(this.name)
+        .vehicleCount(0)
         .build();
   }
 }

@@ -2,8 +2,8 @@ DROP
 DATABASE IF EXISTS byebyechallan;
     CREATE
 DATABASE IF NOT EXISTS byebyechallan;
-    USE
-byebyechallan;
+
+USE byebyechallan;
 
 
 -- 2024-06-17: Added core_state_country_m table to store state and country information for documents.

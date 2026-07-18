@@ -56,8 +56,7 @@ public class UserProfileService {
     List<ProfileDto> profileDtos = new ArrayList<>();
 
     try {
-      List<UserProfileTEntity> userProfileTEntities = userProfileRepository.getAllProfile(userId);
-      profileDtos = userProfileTEntities.stream().map(UserProfileTEntity::getProfileDto).toList();
+      profileDtos = userProfileRepository.getAllProfile(userId);
 
     } catch (Exception e) {
       throw new RuntimeException("Error while fetching profiles: " + e.getMessage());
