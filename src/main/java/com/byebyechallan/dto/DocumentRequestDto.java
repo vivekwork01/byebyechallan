@@ -18,6 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DocumentRequestDto {
 
+  private long id;
   private String docTemplateId;
   private String docName;
   private String docId;
@@ -31,6 +32,7 @@ public class DocumentRequestDto {
   public UserDocumentTEntity getUserDocEntity(Long profileId, String vehicleRegistrationNo,
       UserProfileTEntity userProfileT) {
     return UserDocumentTEntity.builder()
+        .id(this.id)
         .profileId(profileId)
         .docTemplateId(this.docTemplateId)
         .docName(this.docName)
@@ -45,7 +47,7 @@ public class DocumentRequestDto {
         .sms(this.sms)
         .email(this.email)
         .whatsapp(this.whatsApp)
-        .sms(false)
+        .sms(this.sms)
         .deleted(false)
         .createdTime(Timestamp.from(new Date().toInstant()))
         .updatedTime(Timestamp.from(new Date().toInstant()))
