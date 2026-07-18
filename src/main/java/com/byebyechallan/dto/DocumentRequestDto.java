@@ -27,6 +27,7 @@ public class DocumentRequestDto {
   private boolean whatsApp;
   private Timestamp expiryDate;
   private Timestamp notificationTime;
+  private String s3Link;
   private boolean uploaded;
 
   public UserDocumentTEntity getUserDocEntity(Long profileId, String vehicleRegistrationNo,
@@ -41,7 +42,7 @@ public class DocumentRequestDto {
         .expiryDate(this.expiryDate)
         .uploadedDate(Timestamp.from(new Date().toInstant()))
         .docS3Upload(
-            "url_xxx") // Placeholder for S3 upload URL, should be replaced with actual logic to upload and get the URL
+            this.s3Link) // Placeholder for S3 upload URL, should be replaced with actual logic to upload and get the URL
         .notificationTime(this.notificationTime)
         .uploaded(this.uploaded)
         .sms(this.sms)
