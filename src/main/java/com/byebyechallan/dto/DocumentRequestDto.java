@@ -18,7 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DocumentRequestDto {
 
-  private long id;
+  private Long id;
   private String docTemplateId;
   private String docName;
   private String docId;
@@ -32,8 +32,7 @@ public class DocumentRequestDto {
 
   public UserDocumentTEntity getUserDocEntity(Long profileId, String vehicleRegistrationNo,
       UserProfileTEntity userProfileT) {
-    return UserDocumentTEntity.builder()
-        .id(this.id)
+    UserDocumentTEntity.UserDocumentTEntityBuilder builder = UserDocumentTEntity.builder()
         .profileId(profileId)
         .docTemplateId(this.docTemplateId)
         .docName(this.docName)
@@ -42,7 +41,8 @@ public class DocumentRequestDto {
         .expiryDate(this.expiryDate)
         .uploadedDate(Timestamp.from(new Date().toInstant()))
         .docS3Upload(
-            this.s3Link) // Placeholder for S3 upload URL, should be replaced with actual logic to upload and get the URL
+            this.s3Link != null ? this.s3Link
+                : "No Link Available") // Placeholder for S3 upload URL, should be replaced with actual logic to upload and get the URL
         .notificationTime(this.notificationTime)
         .uploaded(this.uploaded)
         .sms(this.sms)
@@ -52,7 +52,10 @@ public class DocumentRequestDto {
         .deleted(false)
         .createdTime(Timestamp.from(new Date().toInstant()))
         .updatedTime(Timestamp.from(new Date().toInstant()))
-        .userProfile(userProfileT)
-        .build();
+        .userProfile(userProfileT);
+    if (this.id != null && this.id != 0) {
+      builder.id(this.id);
+    }
+    return builder.build();
   }
 }
