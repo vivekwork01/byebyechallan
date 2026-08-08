@@ -48,6 +48,9 @@ public class UserDocumentTEntity {
   @Column(name = "doc_s3_upload")
   private String docS3Upload;
 
+  @Column(name = "file_name")
+  private String fileName;
+
   @Column(name = "uploaded_date")
   private Timestamp uploadedDate;
 
@@ -92,6 +95,7 @@ public class UserDocumentTEntity {
         .docName(this.docName)
         .docId(this.docId)
         .s3Link(this.docS3Upload)
+        .fileName(this.fileName)
         .uploadedDate(this.uploadedDate)
         .expiryDate(this.expiryDate)
         .uploaded(this.uploaded)

@@ -19,6 +19,7 @@ public class UserDocumentDto {
   private String docId;
   private String docName;
   private String s3Link;
+  private String fileName;
   private Timestamp uploadedDate;
   private Timestamp expiryDate;
   private boolean uploaded;

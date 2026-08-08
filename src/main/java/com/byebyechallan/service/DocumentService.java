@@ -21,12 +21,15 @@ public class DocumentService {
   private final DocumentRepository documentRepository;
   private final UserProfileRepository profileRepository;
   private final UserDocumentRepository userDocumentRepository;
+  private final InMemoryFileService fileService;
 
   public DocumentService(DocumentRepository documentRepository,
-      UserProfileRepository profileRepository, UserDocumentRepository userDocumentRepository) {
+      UserProfileRepository profileRepository, UserDocumentRepository userDocumentRepository,
+      InMemoryFileService fileService) {
     this.documentRepository = documentRepository;
     this.profileRepository = profileRepository;
     this.userDocumentRepository = userDocumentRepository;
+    this.fileService = fileService;
   }
 
   public List<DocumentRequestDto> getDocumentList(String country, String state,
@@ -59,7 +62,7 @@ public class DocumentService {
       }
 
       userDocumentTEntity = documentRequestDto.getUserDocEntity(profileId, vehicleRegistrationNo,
-          userProfileT);
+          userProfileT, resolveS3Link(userId, documentRequestDto.getFileName()));
       userDocumentTEntity = userDocumentRepository.save(userDocumentTEntity);
       log.info("Document saved successfully for userId: {}, profileId: {}, docTemplateId: {}",
           userId, profileId, documentRequestDto.getDocTemplateId());
@@ -68,8 +71,20 @@ public class DocumentService {
       log.error("Error occurred while Saving Doc: {}", e.getMessage());
       throw new RuntimeException("Error occurred while Saving Doc: " + e.getMessage());
     }
-    return userDocumentTEntity.getUserDocDto();
+    return toUserDocumentDto(userDocumentTEntity);
+  }
 
+  private UserDocumentDto toUserDocumentDto(UserDocumentTEntity entity) {
+    UserDocumentDto dto = entity.getUserDocDto();
+    dto.setS3Link(resolveS3Link(entity.getUserProfile().getUserId(), entity.getFileName()));
+    return dto;
+  }
+
+  private String resolveS3Link(long userId, String fileName) {
+    if (fileName == null || fileName.isBlank() || "No File Name".equals(fileName)) {
+      return "No Link Available";
+    }
+    return fileService.buildFileUrl(userId, fileName);
   }
 
   public List<UserDocumentDto> getAllDocuments(long userId, long profileId,
@@ -87,7 +102,7 @@ public class DocumentService {
 
       userDocumentDtos = documentTEntities.stream().collect(
           ArrayList::new,
-          (list, entity) -> list.add(entity.getUserDocDto()),
+          (list, entity) -> list.add(toUserDocumentDto(entity)),
           ArrayList::addAll
       );
 
