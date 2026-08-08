@@ -28,6 +28,7 @@ public class DocumentRequestDto {
   private Timestamp expiryDate;
   private Timestamp notificationTime;
   private String fileName;
+  private String s3FileName;
   private boolean uploaded;
 
   public UserDocumentTEntity getUserDocEntity(Long profileId, String vehicleRegistrationNo,

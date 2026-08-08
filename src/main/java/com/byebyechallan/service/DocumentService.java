@@ -62,7 +62,7 @@ public class DocumentService {
       }
 
       userDocumentTEntity = documentRequestDto.getUserDocEntity(profileId, vehicleRegistrationNo,
-          userProfileT, resolveS3Link(userId, documentRequestDto.getFileName()));
+          userProfileT, resolveS3Link(userId, documentRequestDto.getS3FileName()));
       userDocumentTEntity = userDocumentRepository.save(userDocumentTEntity);
       log.info("Document saved successfully for userId: {}, profileId: {}, docTemplateId: {}",
           userId, profileId, documentRequestDto.getDocTemplateId());
@@ -76,7 +76,6 @@ public class DocumentService {
 
   private UserDocumentDto toUserDocumentDto(UserDocumentTEntity entity) {
     UserDocumentDto dto = entity.getUserDocDto();
-    dto.setS3Link(resolveS3Link(entity.getUserProfile().getUserId(), entity.getFileName()));
     return dto;
   }
 
