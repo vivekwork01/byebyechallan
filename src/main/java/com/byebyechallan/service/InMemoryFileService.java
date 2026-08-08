@@ -36,7 +36,8 @@ public class InMemoryFileService {
     Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
     return FileResponseDto.builder()
-        .fileName(fileName)
+        .fileName(file.getOriginalFilename())
+        .originalFileName(file.getOriginalFilename())
         .filePath(filePath.toString())
         .fileUrl(buildFileUrl(userId, fileName, request))
         .build();

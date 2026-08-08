@@ -14,6 +14,7 @@ import lombok.Setter;
 @Builder
 public class FileResponseDto {
   private String fileName;
+  private String originalFileName;
   private String filePath;
   private String fileUrl;
 }
