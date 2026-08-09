@@ -407,3 +407,4 @@ ALTER TABLE user_document_t
 UPDATE `byebyechallan`.`core_country_state_m` SET `country_name` = 'INDIA' WHERE (`country_state_id` LIKE  'IN%');
 
 ALTER TABLE user_document_t ADD COLUMN file_name VARCHAR(128) DEFAULT "No File Name" AFTER doc_s3_upload;
+ALTER TABLE user_document_t ADD COLUMN is_renewable TINYINT DEFAULT 1 AFTER expiry_date;

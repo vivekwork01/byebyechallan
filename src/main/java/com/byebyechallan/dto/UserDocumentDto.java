@@ -22,6 +22,7 @@ public class UserDocumentDto {
   private String fileName;
   private Timestamp uploadedDate;
   private Timestamp expiryDate;
+  private boolean renewable;
   private boolean uploaded;
   private boolean sms;
   private boolean email;

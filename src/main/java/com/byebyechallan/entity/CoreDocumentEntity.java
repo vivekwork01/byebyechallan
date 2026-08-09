@@ -42,6 +42,12 @@ public class CoreDocumentEntity {
   @Column(name = "doc_type")
   private String docType;
 
+  @Column(name = "notification_time")
+  private Timestamp notificationTime;
+
+  @Column(name = "is_renewable")
+  private Boolean renewable;
+
   @Column(name = "is_deleted")
   private Boolean deleted;
 
@@ -71,7 +77,10 @@ public class CoreDocumentEntity {
         .email(false)
         .whatsApp(false)
         .expiryDate(Timestamp.from(Instant.now()))
-        .notificationTime(Timestamp.from(Instant.now()))
+        .notificationTime(this.notificationTime != null
+            ? this.notificationTime
+            : Timestamp.from(Instant.now()))
+        .renewable(this.renewable != null && this.renewable)
         .uploaded(false)
         .build();
   }

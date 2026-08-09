@@ -27,6 +27,7 @@ public class DocumentRequestDto {
   private boolean whatsApp;
   private Timestamp expiryDate;
   private Timestamp notificationTime;
+  private boolean renewable;
   private String fileName;
   private String s3FileName;
   private boolean uploaded;
@@ -40,6 +41,7 @@ public class DocumentRequestDto {
         .docId(this.docId)
         .vehicleRegistrationNo(vehicleRegistrationNo)
         .expiryDate(this.expiryDate)
+        .renewable(this.renewable)
         .uploadedDate(Timestamp.from(new Date().toInstant()))
         .docS3Upload(s3Link != null ? s3Link : "No Link Available")
         .fileName(this.fileName != null ? this.fileName : "No File Name")

@@ -57,6 +57,9 @@ public class UserDocumentTEntity {
   @Column(name = "expiry_date")
   private Timestamp expiryDate;
 
+  @Column(name = "is_renewable")
+  private Boolean renewable;
+
   @Column(name = "is_sms")
   private Boolean sms;
 
@@ -98,6 +101,7 @@ public class UserDocumentTEntity {
         .fileName(this.fileName)
         .uploadedDate(this.uploadedDate)
         .expiryDate(this.expiryDate)
+        .renewable(this.renewable)
         .uploaded(this.uploaded)
         .sms(this.sms)
         .email(this.email)
