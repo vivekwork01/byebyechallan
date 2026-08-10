@@ -33,14 +33,14 @@ public class DocumentRequestDto {
   private boolean uploaded;
 
   public UserDocumentTEntity getUserDocEntity(Long profileId, String vehicleRegistrationNo,
-      UserProfileTEntity userProfileT, String s3Link) {
+      UserProfileTEntity userProfileT, RCDto rcDto, String s3Link) {
     UserDocumentTEntity.UserDocumentTEntityBuilder builder = UserDocumentTEntity.builder()
         .profileId(profileId)
         .docTemplateId(this.docTemplateId)
         .docName(this.docName)
         .docId(this.docId)
         .vehicleRegistrationNo(vehicleRegistrationNo)
-        .expiryDate(this.expiryDate)
+        .expiryDate(!this.renewable && null != rcDto ? rcDto.getExpiryDate() : this.expiryDate)
         .renewable(this.renewable)
         .uploadedDate(Timestamp.from(new Date().toInstant()))
         .docS3Upload(s3Link != null ? s3Link : "No Link Available")

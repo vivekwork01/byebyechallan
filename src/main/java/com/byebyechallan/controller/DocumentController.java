@@ -1,5 +1,6 @@
 package com.byebyechallan.controller;
 
+import com.byebyechallan.dto.DocumentDto;
 import com.byebyechallan.dto.DocumentRequestDto;
 import com.byebyechallan.dto.UserDocumentDto;
 import com.byebyechallan.entity.CoreDocumentEntity;
@@ -43,9 +44,9 @@ public class DocumentController {
   public UserDocumentDto saveDocument(@PathVariable("userId") long userId,
       @PathVariable("profileId") long profileId,
       @PathVariable("vehicleRegistrationNo") String vehicleRegistrationNo,
-      @RequestBody DocumentRequestDto documentRequestDto) {
+      @RequestBody DocumentDto documentDto) {
     return documentService.saveDocument(userId, profileId, vehicleRegistrationNo,
-        documentRequestDto);
+        documentDto.getDocumentRequestDto(), documentDto.getRcDto());
   }
 
   @GetMapping("/{userId}/profile/{profileId}/registration/{vehicleRegistrationNo}")

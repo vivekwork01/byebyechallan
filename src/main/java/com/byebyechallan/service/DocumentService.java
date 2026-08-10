@@ -1,6 +1,7 @@
 package com.byebyechallan.service;
 
 import com.byebyechallan.dto.DocumentRequestDto;
+import com.byebyechallan.dto.RCDto;
 import com.byebyechallan.dto.UserDocumentDto;
 import com.byebyechallan.entity.CoreDocumentEntity;
 import com.byebyechallan.entity.UserDocumentTEntity;
@@ -51,9 +52,10 @@ public class DocumentService {
 
   public UserDocumentDto saveDocument(long userId, long profileId,
       String vehicleRegistrationNo,
-      DocumentRequestDto documentRequestDto) {
+      DocumentRequestDto documentRequestDto, RCDto rcDto) {
     UserProfileTEntity userProfileT;
     UserDocumentTEntity userDocumentTEntity;
+    List<UserDocumentTEntity> userDocumentTEntities = new ArrayList<>();
     try {
       userProfileT = profileRepository.findById(profileId)
           .orElseThrow(() -> new RuntimeException("Profile not found with id: " + profileId));
@@ -61,9 +63,22 @@ public class DocumentService {
         throw new RuntimeException("Profile does not belong to the user");
       }
 
+      String docTemplateId = documentRequestDto.getDocTemplateId();
+      String s3Link = documentRequestDto.getS3FileName();
+
+      // If the Doc is Certificate and Registration, then update the expiry date of all the non-renewed documents for that profile and vehicle registration number
+      if (docTemplateId.contains("Certificate") && docTemplateId.contains("Registration")) {
+        s3Link = rcDto.getRcS3Link();
+        userDocumentTEntities = userDocumentRepository.getNonRenewDoc(userId, profileId, vehicleRegistrationNo, false, false);
+        userDocumentTEntities.forEach(doc -> {
+          doc.setExpiryDate(rcDto.getExpiryDate());
+          userDocumentRepository.save(doc);
+        });
+      }
       userDocumentTEntity = documentRequestDto.getUserDocEntity(profileId, vehicleRegistrationNo,
-          userProfileT, resolveS3Link(userId, documentRequestDto.getS3FileName()));
-      userDocumentTEntity = userDocumentRepository.save(userDocumentTEntity);
+          userProfileT, rcDto, resolveS3Link(userId, s3Link));
+      userDocumentTEntities.add(userDocumentTEntity);
+      userDocumentRepository.saveAll(userDocumentTEntities);
       log.info("Document saved successfully for userId: {}, profileId: {}, docTemplateId: {}",
           userId, profileId, documentRequestDto.getDocTemplateId());
 
@@ -71,13 +86,16 @@ public class DocumentService {
       log.error("Error occurred while Saving Doc: {}", e.getMessage());
       throw new RuntimeException("Error occurred while Saving Doc: " + e.getMessage());
     }
-    return toUserDocumentDto(userDocumentTEntity);
+    return userDocumentTEntity.getUserDocDto();
   }
 
-  private UserDocumentDto toUserDocumentDto(UserDocumentTEntity entity) {
-    UserDocumentDto dto = entity.getUserDocDto();
-    return dto;
+  public UserDocumentTEntity buildUserDocEntity(Long profileId, String vehicleRegistrationNo,
+      UserProfileTEntity userProfileT, RCDto rcDto, String s3Link,
+      DocumentRequestDto documentRequestDto) {
+    return documentRequestDto.getUserDocEntity(profileId, vehicleRegistrationNo, userProfileT,
+        rcDto, resolveS3Link(userProfileT.getUserId(), s3Link));
   }
+
 
   private String resolveS3Link(long userId, String fileName) {
     if (fileName == null || fileName.isBlank() || "No File Name".equals(fileName)) {
@@ -101,7 +119,7 @@ public class DocumentService {
 
       userDocumentDtos = documentTEntities.stream().collect(
           ArrayList::new,
-          (list, entity) -> list.add(toUserDocumentDto(entity)),
+          (list, entity) -> list.add(entity.getUserDocDto()),
           ArrayList::addAll
       );
 

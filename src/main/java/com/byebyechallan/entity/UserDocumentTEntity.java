@@ -8,9 +8,11 @@ import lombok.Getter;
 
 import java.sql.Timestamp;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -22,6 +24,14 @@ import lombok.NoArgsConstructor;
         "AND u.userProfile.userId = :userId " +
         "AND u.profileId = :profileId " +
         "AND u.vehicleRegistrationNo = :vehicleRegistrationNo")
+
+@NamedQuery(name = "UserDocumentTEntity.getNonRenewDoc",
+    query = "SELECT u FROM UserDocumentTEntity u " +
+        "WHERE u.deleted = :isDeleted " +
+        "AND u.userProfile.userId = :userId " +
+        "AND u.profileId = :profileId " +
+        "AND u.vehicleRegistrationNo = :vehicleRegistrationNo "
+        + "AND u.renewable = :renewable")
 
 public class UserDocumentTEntity {
 

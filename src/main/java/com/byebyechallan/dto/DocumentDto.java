@@ -1,6 +1,5 @@
 package com.byebyechallan.dto;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,11 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class VehicleRequestDto {
+public class DocumentDto {
 
-  private String vehicleRegistrationNumber;
-  private String vehicleName;
+  private DocumentRequestDto documentRequestDto;
   private RCDto rcDto;
-  private List<DocumentRequestDto> documents;
-
 }
+

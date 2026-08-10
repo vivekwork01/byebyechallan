@@ -11,4 +11,7 @@ public interface UserDocumentRepository extends JpaRepository<UserDocumentTEntit
 
   List<UserDocumentTEntity> getAllDocument(long userId, long profileId,
       String vehicleRegistrationNo, boolean isDeleted);
+
+  List<UserDocumentTEntity> getNonRenewDoc(long userId, long profileId,
+      String vehicleRegistrationNo, boolean isDeleted, boolean renewable);
 }

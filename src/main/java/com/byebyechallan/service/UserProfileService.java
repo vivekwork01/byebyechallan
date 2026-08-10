@@ -8,9 +8,11 @@ import com.byebyechallan.dto.UserDocumentDto;
 import com.byebyechallan.dto.VehicleRequestDto;
 import com.byebyechallan.entity.CoreDocumentEntity;
 import com.byebyechallan.entity.CoreProfileVehicleTr;
+import com.byebyechallan.entity.UserDocumentTEntity;
 import com.byebyechallan.entity.UserProfileTEntity;
 import com.byebyechallan.repository.DocumentRepository;
 import com.byebyechallan.repository.ProfileVehicleRepository;
+import com.byebyechallan.repository.UserDocumentRepository;
 import com.byebyechallan.repository.UserProfileRepository;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -24,12 +26,15 @@ import org.springframework.stereotype.Service;
 public class UserProfileService {
 
   private final UserProfileRepository userProfileRepository;
+  private final UserDocumentRepository userDocumentRepository;
   private final ProfileVehicleRepository profileVehicleRepo;
   private final DocumentService documentService;
 
   public UserProfileService(UserProfileRepository userProfileRepository,
+      UserDocumentRepository userDocumentRepository,
       ProfileVehicleRepository profileVehicleRepo, DocumentService documentService) {
     this.userProfileRepository = userProfileRepository;
+    this.userDocumentRepository = userDocumentRepository;
     this.profileVehicleRepo = profileVehicleRepo;
     this.documentService = documentService;
   }
@@ -85,12 +90,15 @@ public class UserProfileService {
       // saving documents
       List<UserDocumentDto> savedDoc = null;
       CoreProfileVehicleTr finalEntity = entity;
-      savedDoc = vehicleRequestDto.getDocuments().stream()
-          .map(input -> documentService.saveDocument(
-              finalEntity.getUserProfile().getUserId(), profileId, vehicleRegistrationNo, input))
+      List<UserDocumentTEntity> userDocumentTEntities = vehicleRequestDto.getDocuments().stream()
+          .map(input -> documentService.buildUserDocEntity(
+              finalEntity.getProfileId(), vehicleRegistrationNo, finalEntity.getUserProfile(),
+              vehicleRequestDto.getRcDto(), input.getS3FileName(), input))
           .toList();
-      dto.setDocs(savedDoc);
 
+      userDocumentTEntities = userDocumentRepository.saveAll(userDocumentTEntities);
+      savedDoc = userDocumentTEntities.stream().map(UserDocumentTEntity::getUserDocDto).toList();
+      dto.setDocs(savedDoc);
     } catch (Exception e) {
       throw new RuntimeException("Unable to save Vehicle for Profile", e);
     }

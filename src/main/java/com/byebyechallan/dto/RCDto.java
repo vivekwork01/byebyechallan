@@ -1,6 +1,6 @@
 package com.byebyechallan.dto;
 
-import java.util.List;
+import java.sql.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,11 +12,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class VehicleRequestDto {
+public class RCDto {
 
-  private String vehicleRegistrationNumber;
-  private String vehicleName;
-  private RCDto rcDto;
-  private List<DocumentRequestDto> documents;
-
+  private String registrationNo;
+  private Timestamp registrationDate;
+  private Timestamp expiryDate;
+  private String rcS3Link;
 }
