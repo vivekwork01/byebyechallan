@@ -40,7 +40,9 @@ public class SecurityConfig {
             .requestMatchers("/api/v1/document/**").permitAll() //hasAnyRole("USER", "ADMIN")
             .requestMatchers("/api/v1/user/**").permitAll() //.hasAnyRole("USER", "ADMIN")
             .requestMatchers("/api/v1/file/**").permitAll() // .hasAnyRole("USER", "ADMIN")
-            .requestMatchers("/api-docs", "/api-docs/**", "/v3/api-docs", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html"
+            .requestMatchers("/api/v1/notifications/**").permitAll() // .hasAnyRole("USER", "ADMIN")
+            .requestMatchers("/api-docs", "/api-docs/**", "/v3/api-docs", "/v3/api-docs/**",
+                "/swagger-ui/**", "/swagger-ui.html"
             ).permitAll()
             .anyRequest().authenticated())
         .sessionManagement(

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,20 @@ public class ProfileController {
   public ProfileDto createProfile(@PathVariable("userId") long userId,
       @RequestBody ProfileRequestDto profileRequestDto) {
     return profileService.createProfile(userId, profileRequestDto);
+  }
+
+  @GetMapping("/{profileId}")
+  @Operation(summary = "Get Profile", description = "Get Profile for a User")
+  public ProfileDto getProfile(@PathVariable("userId") long userId,
+      @PathVariable("profileId") long profileId) {
+    return profileService.getProfile(userId, profileId);
+  }
+
+  @PutMapping("/{profileId}")
+  @Operation(summary = "Update Profile", description = "Update Profile for a User")
+  public ProfileDto updateProfile(@PathVariable("userId") long userId, @PathVariable("profileId") long profileId,
+      @RequestBody ProfileRequestDto profileRequestDto) {
+    return profileService.updateProfile(userId, profileId, profileRequestDto);
   }
 
   @GetMapping()

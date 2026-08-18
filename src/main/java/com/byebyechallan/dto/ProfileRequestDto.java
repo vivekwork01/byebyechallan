@@ -1,5 +1,7 @@
 package com.byebyechallan.dto;
 
+import com.byebyechallan.NotificationChannel;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,4 +16,5 @@ import lombok.Setter;
 public class ProfileRequestDto {
 
   private String profileName;
+  Map<NotificationChannel, String> recipients;
 }

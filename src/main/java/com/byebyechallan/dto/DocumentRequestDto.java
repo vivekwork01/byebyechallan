@@ -45,7 +45,6 @@ public class DocumentRequestDto {
         .uploadedDate(Timestamp.from(new Date().toInstant()))
         .docS3Upload(s3Link != null ? s3Link : "No Link Available")
         .fileName(this.fileName != null ? this.fileName : "No File Name")
-        .notificationTime(this.notificationTime)
         .uploaded(this.uploaded)
         .sms(this.sms)
         .email(this.email)

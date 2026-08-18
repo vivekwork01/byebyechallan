@@ -343,11 +343,12 @@ CREATE TABLE core_user_m
 
 CREATE TABLE user_profile_t
 (
-    id           INT PRIMARY KEY AUTO_INCREMENT,
-    user_id      LONG         NOT NULL,
-    name         VARCHAR(256) NOT NULL,
-    is_deleted   TINYINT   DEFAULT 0,
-    created_time TIMESTAMP DEFAULT NOW()
+    id                      INT PRIMARY KEY AUTO_INCREMENT,
+    user_id                 LONG         NOT NULL,
+    name                    VARCHAR(256) NOT NULL,
+    notification_recipients VARCHAR(256) NOT NULL,
+    is_deleted              TINYINT   DEFAULT 0,
+    created_time            TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE user_document_t
@@ -364,7 +365,6 @@ CREATE TABLE user_document_t
     is_sms                  TINYINT   DEFAULT 1,
     is_email                TINYINT   DEFAULT 1,
     is_whatsapp             TINYINT   DEFAULT 1,
-    notification_time       TIMESTAMP    NOT NULL,
     is_deleted              TINYINT   DEFAULT 0,
     created_time            TIMESTAMP DEFAULT NOW(),
     updated_time            TIMESTAMP DEFAULT NOW()
@@ -399,12 +399,25 @@ CREATE TABLE core_profile_vehicle_tr
     updated_time            TIMESTAMP             DEFAULT NOW()
 );
 
--- adding is document uploaded as we will add all the doc during the profile vehicle creation itself
+UPDATE `byebyechallan`.`core_country_state_m`
+SET `country_name` = 'INDIA'
+WHERE (`country_state_id` LIKE 'IN%');
+
 ALTER TABLE user_document_t
-    ADD COLUMN is_uploaded TINYINT DEFAULT False AFTER notification_time;
+    ADD COLUMN file_name VARCHAR(128) DEFAULT "No File Name" AFTER doc_s3_upload;
+ALTER TABLE user_document_t
+    ADD COLUMN is_renewable TINYINT DEFAULT 1 AFTER expiry_date;
 
 
-UPDATE `byebyechallan`.`core_country_state_m` SET `country_name` = 'INDIA' WHERE (`country_state_id` LIKE  'IN%');
-
-ALTER TABLE user_document_t ADD COLUMN file_name VARCHAR(128) DEFAULT "No File Name" AFTER doc_s3_upload;
-ALTER TABLE user_document_t ADD COLUMN is_renewable TINYINT DEFAULT 1 AFTER expiry_date;
+CREATE TABLE core_job_schedule_t
+(
+    job_id             INT       NOT NULL PRIMARY KEY,
+    channel            VARCHAR(64),
+    notification_event TEXT      NOT NULL,
+    scheduleAt         TIMESTAMP          DEFAULT NOW(),
+    status             VARCHAR(128),
+    retry_count        INT       NOT NULL DEFAULT 0,
+    is_deleted         TINYINT   NOT NULL DEFAULT 0,
+    created_time       TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_time       TIMESTAMP NOT NULL DEFAULT NOW()
+);

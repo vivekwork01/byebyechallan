@@ -1,29 +1,28 @@
 package com.byebyechallan.service;
 
-import com.byebyechallan.dto.DocumentRequestDto;
 import com.byebyechallan.dto.ProfileDto;
 import com.byebyechallan.dto.ProfileRequestDto;
 import com.byebyechallan.dto.ProfileVehicleResponseDto;
 import com.byebyechallan.dto.UserDocumentDto;
 import com.byebyechallan.dto.VehicleRequestDto;
-import com.byebyechallan.entity.CoreDocumentEntity;
 import com.byebyechallan.entity.CoreProfileVehicleTr;
 import com.byebyechallan.entity.UserDocumentTEntity;
 import com.byebyechallan.entity.UserProfileTEntity;
-import com.byebyechallan.repository.DocumentRepository;
 import com.byebyechallan.repository.ProfileVehicleRepository;
 import com.byebyechallan.repository.UserDocumentRepository;
 import com.byebyechallan.repository.UserProfileRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserProfileService {
+
+  private static final ObjectMapper objectMapper = new ObjectMapper();
 
   private final UserProfileRepository userProfileRepository;
   private final UserDocumentRepository userDocumentRepository;
@@ -45,6 +44,7 @@ public class UserProfileService {
     try {
       UserProfileTEntity userProfileTEntity = UserProfileTEntity.builder()
           .name(profileRequestDto.getProfileName())
+          .notificationRecipients(objectMapper.writeValueAsString(profileRequestDto.getRecipients()))
           .userId(userId)
           .deleted(false)
           .createdTime(Timestamp.from(new Date().toInstant()))
@@ -118,5 +118,38 @@ public class UserProfileService {
       throw new RuntimeException("Exception during fetch of Profile Vehicles");
     }
     return responseDtos;
+  }
+
+  public ProfileDto updateProfile(long userId, long profileId,
+      ProfileRequestDto profileRequestDto) {
+    Optional<UserProfileTEntity> profileTEntity;
+    try {
+      profileTEntity = userProfileRepository.findById(profileId);
+      if (profileTEntity.isPresent() && profileTEntity.get().getUserId() == userId) {
+        UserProfileTEntity entity = profileTEntity.get();
+        entity.setName(profileRequestDto.getProfileName());
+        entity.setNotificationRecipients(objectMapper.writeValueAsString(profileRequestDto.getRecipients()));
+        entity = userProfileRepository.save(entity);
+        return entity.getProfileDto();
+      } else {
+        throw new RuntimeException("No such Profile Exist for the User");
+      }
+    } catch (Exception e) {
+      throw new RuntimeException("Error while updating profile: " + e.getMessage());
+    }
+  }
+
+  public ProfileDto getProfile(long userId, long profileId) {
+    Optional<UserProfileTEntity> profileTEntity;
+    try {
+      profileTEntity=userProfileRepository.findById(profileId);
+      if(profileTEntity.isPresent() && profileTEntity.get().getUserId()==userId){
+        return profileTEntity.get().getProfileDto();
+      }else{
+        throw new RuntimeException("No such Profile Exist for the User");
+      }
+    } catch (Exception e) {
+      throw new RuntimeException("Error while fetching profile: " + e.getMessage());
+    }
   }
 }
